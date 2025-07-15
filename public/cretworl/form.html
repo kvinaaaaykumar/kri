@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Receptio</title>
+</head>
+<body>
+    <h2></h2>
+    <form action="/submit" method="post">
+
+        
+        <label for="serial_no">Serial No:</label>
+        <input type="text" id="serial_no" name="serial_no" readonly><br><br>
+        
+        <label for="today_date">Today's Date:</label>
+        <input type="date" id="today_date" name="today_date"><br><br>
+        
+        <label for="first_name">First Name:</label>
+        <input type="text" id="first_name" name="first_name" required><br><br>
+        
+        <label for="last_name">Last Name:</label>
+        <input type="text" id="last_name" name="last_name" required><br><br>
+        
+        <label for="phone_number">Phone Number:</label>
+        <input type="text" id="phone_number" name="phone_number" pattern="[0-9]{10}" required><br><br>
+        
+        <fieldset>
+            <legend>Address</legend>
+            <label for="house_no">House No./Bldg./Apt.:</label>
+            <input type="text" id="house_no" name="house_no"><br><br>
+            
+            <label for="street">Street/Road/Lane:</label>
+            <input type="text" id="street" name="street"><br><br>
+            
+            <label for="landmark">Landmark:</label>
+            <input type="text" id="landmark" name="landmark"><br><br>
+            
+            <label for="area">Area/Locality/Sector:</label>
+            <input type="text" id="area" name="area"><br><br>
+            
+            <label for="city">Village/Town/City:</label>
+            <input type="text" id="city" name="city"><br><br>
+            
+            <label for="district">District:</label>
+            <input type="text" id="district" name="district"><br><br>
+            
+            <label for="state">State:</label>
+            <input type="text" id="state" name="state"><br><br>
+            
+            <label for="pin_code">Pin Code:</label>
+            <input type="text" id="pin_code" name="pin_code"><br><br>
+        </fieldset>
+        
+        <label for="gender">Gender:</label>
+        <select id="gender" name="gender">
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+        </select><br><br>
+        
+        <label for="dob">Date of Birth:</label>
+        <input type="date" id="dob" name="dob"><br><br>
+        
+        <label>Resident:</label>
+        <input type="checkbox" id="resident" name="resident"><br><br>
+        
+        <label>Non-Resident (NRI):</label>
+        <input type="checkbox" id="nri" name="nri"><br><br>
+        
+        <fieldset>
+            <legend>Purpose</legend>
+            <label>Aadhar Card:</label>
+            <input type="checkbox" id="aadhar_card" name="purpose[]" value="aadhar_card"><br><br>
+            
+            <label>Voter Card:</label>
+            <input type="checkbox" id="voter_card" name="purpose[]" value="voter_card"><br><br>
+            
+            <label>Ration Card:</label>
+            <input type="checkbox" id="rashan_card" name="purpose[]" value="rashan_card"><br><br>
+            
+            <label>For Diet:</label>
+            <input type="checkbox" id="for_diet" name="purpose[]" value="for_diet"><br><br>
+            
+            <label for="diet_date">Date of Diet:</label>
+            <input type="date" id="diet_date" name="diet_date"><br><br>
+            
+            <label for="diet_party_date">Date of Diet Party:</label>
+            <input type="date" id="diet_party_date" name="diet_party_date"><br><br>
+            
+            <label>For Marriage:</label>
+            <input type="checkbox" id="for_marriage" name="purpose[]" value="for_marriage"><br><br>
+            
+            <label for="marriage_date">Date of Marriage:</label>
+            <input type="date" id="marriage_date" name="marriage_date"><br><br>
+            
+            <label for="marriage_party_date">Date of Marriage Party:</label>
+            <input type="date" id="marriage_party_date" name="marriage_party_date"><br><br>
+            
+            <label for="banquet_booking_date">Date of Banquet Booking:</label>
+            <input type="date" id="banquet_booking_date" name="banquet_booking_date"><br><br>
+            
+            <label>For Garbage:</label>
+            <input type="checkbox" id="garbage" name="purpose[]" value="garbage"><br><br>
+            
+            <label>For Sewer:</label>
+            <input type="checkbox" id="sewer" name="purpose[]" value="sewer"><br><br>
+            
+            <label>For Water:</label>
+            <input type="checkbox" id="water" name="purpose[]" value="water"><br><br>
+            
+            <label>For Electricity:</label>
+            <input type="checkbox" id="electricity" name="purpose[]" value="electricity"><br><br>
+            
+            <label>For Drain:</label>
+            <input type="checkbox" id="drain" name="purpose[]" value="drain"><br><br>
+            
+            <label>For Fighting:</label>
+            <input type="checkbox" id="fighting" name="purpose[]" value="fighting"><br><br>
+            
+            <label>Complaint Against MCD Employee:</label>
+            <input type="checkbox" id="mcd_complaint" name="purpose[]" value="mcd_complaint"><br><br>
+            
+            <label>For Illegal Construction:</label>
+            <input type="checkbox" id="illegal_construction" name="purpose[]" value="illegal_construction"><br><br>
+            
+            <label>For Crematorium:</label>
+            <input type="checkbox" id="crematorium" name="purpose[]" value="crematorium"><br><br>
+            
+            <label>For Temple Rental:</label>
+            <input type="checkbox" id="temple_rental" name="purpose[]" value="temple_rental"><br><br>
+            
+            <label>For Vehicle Collision:</label>
+            <input type="checkbox" id="vehicle_collision" name="purpose[]" value="vehicle_collision"><br><br>
+        </fieldset>
+        
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>

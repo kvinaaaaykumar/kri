@@ -1,0 +1,271 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aadhaar Details Form</title>
+    <style>
+        form {
+            width: 80%;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #000;
+        }
+        label, input, select {
+            display: block;
+            margin: 10px 0;
+        }
+        button {
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: left;
+        }
+        #charts {
+            width: 80%;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Aadhaar Details Form</h1>
+
+    <form id="aadhaar-form">
+        <div class="form-group">
+        <label for="full-name">Full Name:</label>
+        <input type="text" class="form-control" id="full-name" required>
+        </div>
+
+        <div class="form-group">
+        <label for="gender">Gender:</label>
+        <select id="gender" required>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+        </select>
+        </div>
+
+        <div class="form-group">
+        <label for="dob">Date of Birth:</label>
+        <input type="date" class="form-control" id="dob" required>
+        </div>
+
+        <div class="form-group">
+        <label for="address">Address:</label>
+        <input type="text" class="form-control" id="address" required>
+        </div>
+
+        <div class="form-group">
+        <label for="pincode">Pin Code:</label>
+        <input type="number" class="form-control" id="pincode" required>
+        </div>
+
+        <div class="form-group">
+        <label for="aadhaar-number">Aadhaar Number:</label>
+        <input type="number" class="form-control" id="aadhaar-number" required>
+        </div>
+
+        <div class="form-group">
+        <label for="mobile-number">Mobile Number:</label>
+        <input type="number" class="form-control" id="mobile-number" required>
+        </div>
+
+        <div class="form-group">
+        <label for="email-id">Email ID:</label>
+        <input type="email" class="form-control" id="email-id" required>
+        </div>
+
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <h2>Aadhaar Details List</h2>
+    <input type="text" id="search" placeholder="Search by name" onkeyup="searchTable()">
+    <button onclick="downloadExcel()">Download as Excel</button>
+    <table id="aadhaar-table">
+        <thead>
+            <tr>
+                <th>S. No</th>
+                <th>Date</th>
+                <th>Full Name</th>
+                <th>Gender</th>
+                <th>Date of Birth</th>
+                <th>Address</th>
+                <th>Pin Code</th>
+                <th>Aadhaar Number</th>
+                <th>Mobile Number</th>
+                <th>Email ID</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Aadhaar details will be dynamically inserted here -->
+        </tbody>
+    </table>
+
+    <div id="charts">
+        <h3>Gender Distribution</h3>
+        <canvas id="genderChart"></canvas>
+        <h3>Area Pin Code Distribution</h3>
+        <canvas id="pincodeChart"></canvas>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    let genderChartInstance;
+    let pincodeChartInstance;
+
+    document.getElementById('aadhaar-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const serialNumber = document.querySelectorAll('#aadhaar-table tbody tr').length + 1;
+        const date = new Date().toLocaleDateString();
+        const fullName = document.getElementById('full-name').value;
+        const gender = document.getElementById('gender').value;
+        const dob = document.getElementById('dob').value;
+        const address = document.getElementById('address').value;
+        const pincode = document.getElementById('pincode').value;
+        const aadhaarNumber = document.getElementById('aadhaar-number').value;
+        const mobileNumber = document.getElementById('mobile-number').value;
+        const emailId = document.getElementById('email-id').value;
+
+        addAadhaarDetails(serialNumber, date, fullName, gender, dob, address, pincode, aadhaarNumber, mobileNumber, emailId);
+        clearForm();
+        updateCharts();
+    });
+
+    function addAadhaarDetails(serialNumber, date, fullName, gender, dob, address, pincode, aadhaarNumber, mobileNumber, emailId) {
+        const tableBody = document.querySelector('#aadhaar-table tbody');
+        const row = document.createElement('tr');
+
+        row.innerHTML = `
+            <td>${serialNumber}</td>
+            <td>${date}</td>
+            <td>${fullName}</td>
+            <td>${gender}</td>
+            <td>${dob}</td>
+            <td>${address}</td>
+            <td>${pincode}</td>
+            <td>${aadhaarNumber}</td>
+            <td>${mobileNumber}</td>
+            <td>${emailId}</td>
+            <td>
+                <button onclick="editDetails(this)">Edit</button>
+                <button onclick="removeDetails(this)">Remove</button>
+            </td>
+        `;
+
+        tableBody.appendChild(row);
+    }
+
+    function clearForm() {
+        document.getElementById('aadhaar-form').reset();
+    }
+
+    function removeDetails(button) {
+        const row = button.parentElement.parentElement;
+        row.remove();
+        updateCharts();
+    }
+
+    function editDetails(button) {
+        const row = button.parentElement.parentElement;
+        const cells = row.querySelectorAll('td');
+        
+        document.getElementById('full-name').value = cells[2].innerText;
+        document.getElementById('gender').value = cells[3].innerText;
+        document.getElementById('dob').value = cells[4].innerText;
+        document.getElementById('address').value = cells[5].innerText;
+        document.getElementById('pincode').value = cells[6].innerText;
+        document.getElementById('aadhaar-number').value = cells[7].innerText;
+        document.getElementById('mobile-number').value = cells[8].innerText;
+        document.getElementById('email-id').value = cells[9].innerText;
+
+        row.remove();
+        updateCharts();
+    }
+
+    function searchTable() {
+        const searchInput = document.getElementById('search').value.toLowerCase();
+        const tableRows = document.querySelectorAll('#aadhaar-table tbody tr');
+        tableRows.forEach(row => {
+            const cells = row.getElementsByTagName('td');
+            const fullName = cells[2].innerText.toLowerCase();
+            row.style.display = fullName.includes(searchInput) ? '' : 'none';
+        });
+    }
+
+    function downloadExcel() {
+        let table = document.getElementById('aadhaar-table');
+        let wb = XLSX.utils.table_to_book(table, {sheet: "Sheet JS"});
+        XLSX.writeFile(wb, 'aadhaar_details.xlsx');
+    }
+
+    function generateGenderChart() {
+        const genderData = { Male: 0, Female: 0, Other: 0 };
+        document.querySelectorAll('#aadhaar-table tbody tr').forEach(row => {
+            const gender = row.cells[3].innerText;
+            genderData[gender]++;
+        });
+
+        const ctx = document.getElementById('genderChart').getContext('2d');
+        if (genderChartInstance) {
+            genderChartInstance.destroy();
+        }
+        genderChartInstance = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: Object.keys(genderData),
+                datasets: [{
+                    data: Object.values(genderData),
+                    backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56']
+                }]
+            }
+        });
+    }
+
+    function generatePincodeChart() {
+        const pincodeData = {};
+        document.querySelectorAll('#aadhaar-table tbody tr').forEach(row => {
+            const pincode = row.cells[6].innerText;
+            pincodeData[pincode] = (pincodeData[pincode] || 0) + 1;
+        });
+
+        const ctx = document.getElementById('pincodeChart').getContext('2d');
+        if (pincodeChartInstance) {
+            pincodeChartInstance.destroy();
+        }
+        pincodeChartInstance = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: Object.keys(pincodeData),
+                datasets: [{
+                    data: Object.values(pincodeData),
+                    backgroundColor: Object.keys(pincodeData).map(() => `#${Math.floor(Math.random()*16777215).toString(16)}`)
+                }]
+            }
+        });
+    }
+
+    function updateCharts() {
+        generateGenderChart();
+        generatePincodeChart();
+    }
+
+    // Initialize the charts on page load
+    updateCharts();
+</script>
+  </body>
+  </html>
+    
