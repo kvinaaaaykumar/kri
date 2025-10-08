@@ -24,20 +24,207 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>React App</title>
+ <title>SSC CGL</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+    background: #f0f4f8;
+    padding-bottom: 100px; /* Space for bottom nav */
+  }
+  header {
+    background: #0077b6;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    font-size: 24px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  }
+  .content {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 0 15px;
+  }
+  .paper-title {
+    font-size: 22px;
+    font-weight: bold;
+    color: #023e8a;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+  .question-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    padding: 15px 20px;
+    margin-bottom: 15px;
+    transition: transform 0.2s;
+  }
+  .question-card:hover {
+    transform: translateY(-3px);
+  }
+  .question-card h3 {
+    margin: 0 0 10px 0;
+    color: #023e8a;
+  }
+  .question-card p {
+    margin: 0;
+    color: #03045e;
+  }
+
+  /* Bottom menu */
+  .bottom-menu {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #0077b6;
+    padding: 10px;
+    box-shadow: 0 -2px 6px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 1000;
+  }
+  .menu-buttons {
+    display: none; /* hidden initially */
+    overflow-x: auto;
+    margin-top: 10px;
+    width: 100%;
+    gap: 10px;
+    padding-bottom: 5px;
+  }
+  .menu-buttons button {
+    flex-shrink: 0;
+    padding: 10px 15px;
+    font-size: 16px;
+    background: #0096c7;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s;
+  }
+  .menu-buttons button:hover {
+    background: #00b4d8;
+  }
+  .menu-toggle {
+    padding: 12px 25px;
+    font-size: 16px;
+    background: #023e8a;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .menu-toggle:hover {
+    background: #03045e;
+  }
+
+  /* Mobile responsiveness */
+  @media (max-width: 600px) {
+    .menu-buttons button {
+      font-size: 14px;
+      padding: 8px 12px;
+    }
+    .menu-toggle {
+      font-size: 14px;
+      padding: 10px 20px;
+    }
+    .paper-title {
+      font-size: 18px;
+    }
+  }
+    </style>
   </head>
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
 
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
-  </body>
+
+<div class="content" id="content">
+  <p>Welcome! Click on the menu below to select a paper.</p>
+</div>
+
+<div class="bottom-menu">
+  <button class="menu-toggle" onclick="toggleMenu()">Menu ▼</button>
+  <div class="menu-buttons" id="menuButtons">
+    <!-- Paper buttons will be added dynamically -->
+  </div>
+</div>
+
+<script>
+// GK Papers JSON with titles
+const gkPapers = {
+  "Page: 1": [
+    { "question": "Who among the following is the world renowned exponent of the bamboo flute?", "answer": "Hariprasad Chaurasia" },
+        { "question": "Who among the following is the world renowned exponent of the bamboo flute?", "answer": "Hariprasad Chaurasia" },
+            { "question": "Who among the following is the world renowned exponent of the bamboo flute?", "answer": "Hariprasad Chaurasia" },
+                { "question": "Who among the following is the world renowned exponent of the bamboo flute?", "answer": "Hariprasad Chaurasia" },
+                    { "question": "Who among the following is the world renowned exponent of the bamboo flute?", "answer": "Hariprasad Chaurasia" },
+                        { "question": "Who among the following is the world renowned exponent of the bamboo flute?", "answer": "Hariprasad Chaurasia" },
+    { "question": "What is net investment?", "answer": "Gross investment - depreciation" }
+  ],
+  "Paper 2: Science": [
+    { "question": "Which condition, also known as icterus, causes yellowing of skin and eyes?", "answer": "Jaundice" },
+    { "question": "Under which revolutionary was Chittagong Armoury Raid conducted?", "answer": "Surya Sen" }
+  ],
+  "Paper 3: Constitution": [
+    { "question": "Who is known as the father of Indian Constitution?", "answer": "B. R. Ambedkar" }
+  ],
+  "Paper 4: Space": [
+    { "question": "Which planet is known as the Red Planet?", "answer": "Mars" }
+  ],
+  "Paper 5: Geography": [
+    { "question": "What is the capital of Australia?", "answer": "Canberra" }
+  ]
+  // Add more papers as needed
+};
+
+// Display questions with paper title
+function showPaper(paperName) {
+  const contentDiv = document.getElementById("content");
+  const questions = gkPapers[paperName];
+  if (!questions) {
+    contentDiv.innerHTML = "<p>No questions found.</p>";
+    return;
+  }
+
+  let html = `<div class="paper-title">${paperName}</div>`;
+  questions.forEach((q, index) => {
+    html += `
+      <div class="question-card">
+        <h3>Q${index + 1}: ${q.question}</h3>
+        <p><strong>Ans:</strong> ${q.answer}</p>
+      </div>
+    `;
+  });
+  contentDiv.innerHTML = html;
+}
+
+// Toggle menu
+function toggleMenu() {
+  const menu = document.getElementById("menuButtons");
+  const toggleBtn = document.querySelector(".menu-toggle");
+  if (menu.style.display === "flex") {
+    menu.style.display = "none";
+    toggleBtn.innerText = "Menu ▼";
+  } else {
+    menu.style.display = "flex";
+    toggleBtn.innerText = "Menu ▲";
+  }
+}
+
+// Create buttons dynamically
+const menuDiv = document.getElementById("menuButtons");
+Object.keys(gkPapers).forEach(paper => {
+  const btn = document.createElement("button");
+  btn.innerText = paper;
+  btn.onclick = () => showPaper(paper);
+  menuDiv.appendChild(btn);
+});
+</script>
+
+</body>
 </html>
