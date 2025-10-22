@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SSC CGL</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+    background: #f0f4f8;
+    padding-bottom: 100px; /* Space for bottom nav */
+  }
+  header {
+    background: #0077b6;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    font-size: 24px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  }
+  .content {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 0 15px;
+  }
+  .paper-title {
+    font-size: 22px;
+    font-weight: bold;
+    color: #023e8a;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+  .question-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    padding: 15px 20px;
+    margin-bottom: 15px;
+    transition: transform 0.2s;
+  }
+  .question-card:hover {
+    transform: translateY(-3px);
+  }
+  .question-card h3 {
+    margin: 0 0 10px 0;
+    color: #023e8a;
+  }
+  .question-card p {
+    margin: 0;
+    color: #03045e;
+  }
+
+  /* Bottom menu */
+  .bottom-menu {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #0077b6;
+    padding: 10px;
+    box-shadow: 0 -2px 6px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 1000;
+  }
+  .menu-buttons {
+    display: none; /* hidden initially */
+    overflow-x: auto;
+    margin-top: 10px;
+    width: 100%;
+    gap: 10px;
+    padding-bottom: 5px;
+  }
+  .menu-buttons button {
+    flex-shrink: 0;
+    padding: 10px 15px;
+    font-size: 16px;
+    background: #0096c7;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s;
+  }
+  .menu-buttons button:hover {
+    background: #00b4d8;
+  }
+  .menu-toggle {
+    padding: 12px 25px;
+    font-size: 16px;
+    background: #023e8a;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .menu-toggle:hover {
+    background: #03045e;
+  }
+
+  /* Mobile responsiveness */
+  @media (max-width: 600px) {
+    .menu-buttons button {
+      font-size: 14px;
+      padding: 8px 12px;
+    }
+    .menu-toggle {
+      font-size: 14px;
+      padding: 10px 20px;
+    }
+    .paper-title {
+      font-size: 18px;
+    }
+  }
+</style>
+</head>
+<body>
+
+
+
+<div class="content" id="content">
+  <p>Welcome! Click on the menu below to select a paper.</p>
+</div>
+
+<div class="bottom-menu">
+  <button class="menu-toggle" onclick="toggleMenu()">Menu ▼</button>
+  <div class="menu-buttons" id="menuButtons">
+    <!-- Paper buttons will be added dynamically -->
+  </div>
+</div>
+
+<script>
+// GK Papers JSON with titles
+const gkPapers = {
+  "Page: 1": [
+  { "question": "Who among the following is the world renowned exponent of the bamboo flute?", "answer": "Hariprasad Chaurasia" },
+  { "question": "What is net investment?", "answer": "Gross investment - depreciation" },
+  { "question": "India won the ICC Men Cricket World Cup for the first time in which of the following years?", "answer": "1983" },
+  { "question": "Match the following institutes with their respective founders of British India.", "answer": "Asiatic Society of Bengal - Sir William Jones, Sanskrit College of Benaras - Jonathan Duncan, Fort William College - Lord Wellesley, Calcutta Madrasa - Warren Hastings" },
+  { "question": "Kathakali, one of the classical dances of India, is predominantly performed in which of the following states of India?", "answer": "Kerala" },
+  { "question": "Identify the oldest iron and steel company of India from the following options.", "answer": "Tata Iron & Steel Company (TISCO)" },
+  { "question": "The magnificent Kailasa temple at Ellora was built during the reign of which Rashtrakuta king?", "answer": "Krishna I" },
+  { "question": "In which state/UT is the Hemis festival celebrated?", "answer": "Ladakh" },
+  { "question": "Which of the following is the largest artificial lake of Asia?", "answer": "Bhopal Lake" },
+  { "question": "In 2002, Zakir Hussain became the youngest percussionist to be honoured with which award?", "answer": "Padma Bhushan" },
+  { "question": "Microbes like Rhizobium, Nitrosomonas and Nitrobacter are used for:", "answer": "Nitrogen cycling" },
+  { "question": "With reference to Sepoy Mutiny of 1857, on which of the following dates did the soldiers at Meerut start their journey to Delhi?", "answer": "10 May" },
+  { "question": "Who among the following was selected as the Sherpa for India’s G20 hosted in 2022-23?", "answer": "Amitabh Kant" },
+  { "question": "Purvanchal Himalayas does NOT comprise of:", "answer": "Pir Panjal range" },
+  { "question": "In which year did India make its Olympic debut in hockey?", "answer": "1928" },
+  { "question": "A student, on his school assignment, is taking a session on how to make compost at home for using it at a park. Which fundamental duty is he performing?", "answer": "To protect and improve the natural environment" },
+  { "question": "In August 2022, the Ministry of Social Justice and Empowerment launched the ________ scheme, with an aim to provide comprehensive rehabilitation services to people engaged in begging in 75 municipalities.", "answer": "SMILE-75" },
+  { "question": "Which is the National Mission for Financial Inclusion to ensure access to financial services, namely, a basic savings and deposits accounts, remittance, credit, insurance, pension in an affordable manner?", "answer": "Pradhan Mantri Jan Dhan Yojana" },
+  { "question": "Which of the following plays was NOT written by Harshavardhana?", "answer": "Vikramorvasiyam" },
+  { "question": "The organisms that do not have a defined nucleus or organelles are classified into _______ Kingdom.", "answer": "Monera" },
+  { "question": "Which Article of the Constitution of India provides that ‘there shall be a Vice President of India’?", "answer": "Article 63" },
+  { "question": "A javelin thrown by an athlete is in ________ motion.", "answer": "Curvilinear" },
+  { "question": "The green revolution technology resulted in an increase in production of cereal production from 72.4 million tons in 1965-66 to ________ million tons in 1978-79.", "answer": "131.9" },
+  { "question": "Calculate the oxidation number of ‘S’ in H₂S₂O₇", "answer": "3.6" },
+  { "question": "Which of the following is NOT an amendment made to the Airport Economic Regulatory Authority (AERA) Amendment Act, 2021?", "answer": "A major airport is one which has an annual traffic of minimum 35 lakh passengers." }
+],
+  "Page: 2": [
+  { "question": "Which condition, also known as icterus, causes a yellowing of your skin and the whites of your eyes?", "answer": "Jaundice" },
+  { "question": "Under the leadership of which of the following revolutionaries was Chittagong Armoury Raid conducted?", "answer": "Surya Sen" },
+  { "question": "In which of the following states is Govindji Nartanalaya located?", "answer": "Manipur" },
+  { "question": "Which of the following celebrations is dedicated to Sun God and his wife Usha to thank them for sustaining life on earth and for granting wishes?", "answer": "Chhath Puja" },
+  { "question": "Which of the following inscriptions of Rudradaman happened to be the first royal inscription of early India composed in chaste Sanskrit?", "answer": "Girnar" },
+  { "question": "The first southern campaign of Alauddin Khilji in 1307-08 AD was led to which of the following regions?", "answer": "Devagiri" },
+  { "question": "What is the IUPAC name of tertiarybutyl alcohol?", "answer": "2-Methylpropan-2-ol" },
+  { "question": "What is the relationship between interest rate and demand for money?", "answer": "Inverse" },
+  { "question": "When electricity is passed through water, what kind of chemical reaction occurs?", "answer": "Decomposition" },
+  { "question": "Which music-composer duo was honoured with the National Lata Mangeshkar Award for the year 2020?", "answer": "Anand-Milind" },
+  { "question": "Which of the following can be represented as a functional unit of nature?", "answer": "Ecosystem" },
+  { "question": "In which state of India is Kund or Tanka used for water harvesting?", "answer": "Rajasthan" },
+  { "question": "The inaugural match of the Women Premier League 2023 cricket was played in which of the following venues?", "answer": "Mumbai" },
+  { "question": "Which of the following is NOT correct about Directive Principles of State Policy?", "answer": "They are justiciable in nature." },
+  { "question": "At what latitude does the easterly jet stream blow over peninsular India during the summer months?", "answer": "14°N" },
+  { "question": "According to Census of India 2011, in rural India, which state has the maximum female workforce participation rate?", "answer": "Himachal Pradesh" },
+  { "question": "In 2021, in which of the following states did the Prime Minister lay the foundation stone for the Raja Mahendra Pratap Singh State University?", "answer": "Uttar Pradesh" },
+  { "question": "When was a Madrasa opened in Kolkata to promote the study of Arabic, Persian and Islamic law?", "answer": "1781 C.E." },
+  { "question": "Which Article of the Constitution explains that the executive power of every state shall be so exercised as not to impede or prejudice the exercise of the executive power of the Union, and the executive power of the union shall extend to the giving of such directions to a state as may appear to the Government of India to be necessary for that purpose?", "answer": "Article 257" },
+  { "question": "Which of the following statements correctly defines the green revolution?", "answer": "It is a new strategy in agriculture to produce food grains, especially wheat and rice." },
+  { "question": "In the year 1952, who among the following lent his voice for the film ‘Amar Bhupali’, which was being produced in two languages simultaneously and he sang in both Bengali and Marathi?", "answer": "Manna Dey" },
+  { "question": "In which part of India does the hot wind ‘Loo’ blow?", "answer": "North and Northwestern" },
+  { "question": "The government of which of the following states created a draft policy in 2022 for senior citizens on the basis of article 41, which aims to form a directorate for the welfare of senior citizens?", "answer": "Tamil Nadu" },
+  { "question": "When was the High Court and Supreme Court Judges (Salaries and Conditions of Service) Amendment Bill, 2021 introduced in Lok Sabha?", "answer": "30 November 2021" },
+  { "question": "At which Olympics did Gagan Narang win a bronze medal?", "answer": "London 2012" }
+],
+  "Page: 3": [
+  { "question": "Who among the following devised the system of ‘Subsidiary Alliance’?", "answer": "Lord Wellesley" },
+  { "question": "At which Olympics was Kho-Kho featured in an exhibition in the main stadium?", "answer": "1936" },
+  { "question": "Which of the following statements is INCORRECT?", "answer": "Fats and oils get reduced over time and smell bad." },
+  { "question": "Hot local wind that flows over north India in summer is known as:", "answer": "Loo" },
+  { "question": "‘Nuakhai’ is the state festival of:", "answer": "Odisha" },
+  { "question": "Which Article of the Indian Constitution prohibits providing of any religious instruction in the educational institutions maintained by the State?", "answer": "Article 28" },
+  { "question": "As per the definition of Census of India, a ‘marginal worker’ is a person who works for:", "answer": "Less than 183 days (or six months) in a year" },
+  { "question": "In which year was the 'Naye Bharat Ke Sapne' campaign launched by Meta and the Ministry of Women?", "answer": "2023" },
+  { "question": "Under which of the following Acts was the power to rule India transferred from the English East India Company to the British Crown?", "answer": "Government of India Act 1858" },
+  { "question": "Which of the following is an inactivated (killed) polio vaccine developed in 1952?", "answer": "Salk vaccine" },
+  { "question": "Which of the following statements is correct?", "answer": "The five-year plan permits long-term intervention by the government in the economy." },
+  { "question": "What is the length of Indian Railways network, according to Railway Yearbook 2019-20?", "answer": "67,956 km" },
+  { "question": "In Pradhan Mantri Gramin Awaas Yojana, the cost of unit assistance is shared between Central and State Governments in the ratio in plain areas.", "answer": "60 : 40" },
+  { "question": "Silappathikaram (the Jewelled Anklet), the earliest epic poem in Tamil was written in the 5th - 6th Century CE by:", "answer": "Ilango Adigal" },
+  { "question": "Which of the following is the largest crustal plate on Earth with an area of over 103,000,000 km²?", "answer": "Pacific plate" },
+  { "question": "Which of the following personalities is a Padma Shri awardee folk singer from the state of Uttar Pradesh?", "answer": "Ajita Srivastava" },
+  { "question": "Which of the following countries won the first men’s Asian Hockey Championship trophy?", "answer": "India" },
+  { "question": "Which of the following goods needs further transformation in the economic process?", "answer": "Intermediate goods" },
+  { "question": "In which of the following states is the Nrityagram, an Odissi dance institution, located?", "answer": "Karnataka" },
+  { "question": "Who among the following was the youngest instrumentalist to be awarded the Padma Bhushan, the third highest civilian award of India in 2002?", "answer": "Ustad Zakir Hussain" },
+  { "question": "Who was the revenue minister during the reign of Akbar?", "answer": "Todar Mal" },
+{
+  "question": "Which of the following illustrations shows the mitochondrion’s structural details?",
+  "answer": "This image shows mitochondrion with inner & outer membranes, cristae, and matrix.",
+  "image": "images/mitochondrion.png"
+},
+  { "question": "Which of the following is a straight-chain alkyl carboxylic acid with the chemical formula CH3CH2CH2CO2H?", "answer": "Butyric acid" },
+  { "question": "Article 77 of the Indian Constitution deals with the:", "answer": "Conduct of business of the Government of India" },
+  { "question": "The Muslim Women (Protection of Rights on Marriage) Act, 2019 deals with subsistence allowance in which of the following Sections?", "answer": "Section 5" }
+],
+  "Page: 4": [
+  { "question": "In which of the following cities of Manipur is the Jawaharlal Nehru Manipur Dance Academy located?", "answer": "Imphal" },
+  { "question": "By which of the following state governments is the Tansen Music Festival organised?", "answer": "Madhya Pradesh Government" },
+  { "question": "Which of the following places is related to Gandhi’s Satyagraha of the year 1917?", "answer": "Champaran" },
+  { "question": "Hubbardia heptaneuron, which has become endangered, is a species of which of the following?", "answer": "Grass" },
+  { "question": "Which of the following is in geographical proximity to Sri Lanka?", "answer": "Only Karaikal" },
+  { "question": "Which Five-Year Plan primarily focused on the 'Garibi Hatao' initiative?", "answer": "Fifth Five-Year Plan" },
+  { "question": "Which of the following statements is INCORRECT about the Directive Principles of State Policy?", "answer": "They promote welfare of individuals. Hence, they are personal and individualistic." },
+  { "question": "After the death of Humayun, the 13 year-old Akbar was coronated in 1556 at Kalanaur in ________.", "answer": "Punjab" },
+  { "question": "The climate of a place is NOT affected by which of the following?", "answer": "Type of soil" },
+  { "question": "In which musical note did Newland put the metals Co and Ni with halogens?", "answer": "Do" },
+  { "question": "Which of the following is NOT correct with regards to the history of calculating National Income (NI) in India?", "answer": "First official attempt to compute NI was made by PC Mahalanobis." },
+  { "question": "According to the Indian Railways (2019-2020), which state has the largest railway track in India?", "answer": "Uttar Pradesh" },
+  { "question": "Which government honoured a distinguished percussionist named Pandit Anindo Chatterjee with the Banga Vibhushan Award in 2022?", "answer": "West Bengal" },
+  { "question": "Which of the following festivals is celebrated as the birth anniversary of Guru Nanak Dev?", "answer": "Gurpurab" },
+  { "question": "Who was appointed as India’s 28th Controller General of Accounts (CGA) in March 2023?", "answer": "SS Dubey" },
+  { "question": "The Parliament passed the Marine Aids to Navigation Bill, 2021 to repeal and replace which of the following Acts?", "answer": "The Lighthouse Act, 1927" },
+  { "question": "Which of the following is a non-perishable food?", "answer": "Pulses" },
+  { "question": "How many awards were presented at the National Sports and Adventure Awards-2022 ceremony held at Rashtrapati Bhavan on 30 November 2022?", "answer": "44" },
+  { "question": "Which Governor-General of British India helped Raja Ram Mohan Roy legally abolish the sati practice?", "answer": "Lord William Bentinck" },
+  { "question": "When was the 1st Asian Kabaddi Championship held?", "answer": "1980" },
+  { "question": "The decomposition of gaseous Ammonia on a hot platinum surface is a _______________ order reaction at high pressure.", "answer": "Zero" },
+  { "question": "Which of the following was the mascot of the FIH men’s Hockey World Cup – 2023?", "answer": "Olly" },
+  { "question": "The Indian Constitution has established _________.", "answer": "Independent judicial system" },
+  { "question": "Which organisms are classified as Aves?", "answer": "Birds" },
+  { "question": "Mahabalipuram emerged as an important centre of temple architecture under which of the following kingdoms of south India?", "answer": "Pallava" }
+],
+"Page: 5": [
+  { "question": "As of March 2023, how many High Courts are there in India?", "answer": "25" },
+  { "question": "Harela is a festival of greenery, peace, prosperity, and environmental conservation, primarily celebrated in which of the following states?", "answer": "Uttarakhand" },
+  { "question": "Which species is known as black lipped pearl oyster found in the Indo-Pacific, within tropical coral reefs?", "answer": "Pinctada margaritifera" },
+  { "question": "The CSO adopted the concept of Gross Value Added in ______.", "answer": "January 2015" },
+  { "question": "Which of the following social reformers of 19th century India was the author of ‘Stree Purush Tulana’?", "answer": "Tarabai Shinde" },
+  { "question": "How many medals did India win in International Shooting Sport Federation (ISSF) World Cup 2022, which was held in Cairo, Egypt?", "answer": "7" },
+  { "question": "Ustad Vilayat Ali Khan is a maestro in ________.", "answer": "Sitar" },
+  { "question": "Which physical feature of India prevents the cold winds from central Asia from entering the Indian subcontinent?", "answer": "Himalayas" },
+  { "question": "Which state initiated the implementation of the Mid-day Meal scheme in elementary schools?", "answer": "Tamil Nadu" },
+  { "question": "In the 7th Century AD, a new religion called Islam was born in ________.", "answer": "Arabia" },
+  { "question": "Who among the following freedom fighters of India is the author of the book, ‘The Indian Struggle’?", "answer": "Subhas Chandra Bose" },
+  { "question": "Which of the following Articles of the Indian Constitution mentions about the organisation of ‘Village Panchayats’?", "answer": "Article 40" },
+  { "question": "The source of the Sal River is in which of the following states?", "answer": "Goa" },
+  { "question": "Which of the following elements is a metalloid?", "answer": "Silicon" },
+  { "question": "Which of the following is the capital of Arunachal Pradesh?", "answer": "Itanagar" },
+  { "question": "Who among the following painters painted the Bharat Mata?", "answer": "Abanindranath Tagore" },
+  { "question": "In which year did India host the Asian Games for the first time?", "answer": "1951" },
+  { "question": "Which city hosted the SCO Film Festival 2023?", "answer": "Mumbai" },
+  { "question": "Who among the following is the author of the book 'Wings of Fire'?", "answer": "Dr. A.P.J. Abdul Kalam" },
+  { "question": "The word ‘Secular’ was added to the Preamble of the Indian Constitution by which Amendment Act?", "answer": "42nd Amendment Act, 1976" },
+  { "question": "Which of the following rivers does NOT originate in India?", "answer": "Brahmaputra" },
+  { "question": "What is the SI unit of Force?", "answer": "Newton" },
+  { "question": "Which of the following is the largest gland in the human body?", "answer": "Liver" },
+  { "question": "Who among the following was known as the ‘Frontier Gandhi’?", "answer": "Khan Abdul Ghaffar Khan" },
+  { "question": "In which year was the Reserve Bank of India (RBI) nationalised?", "answer": "1949" }
+],
+"Page: 6": [
+  { "question": "Rudrasena II of which of the following dynasties married Prabhavatigupta, the daughter of Chandragupta II of the Gupta dynasty?", "answer": "Vakataka" },
+  { "question": "Madhuri Barthwal, a folk singer and Padma Shri 2022 awardee, belongs to which of the following states of India?", "answer": "Uttarakhand" },
+  { "question": "Which of the following options is the legislative organ of the Union government?", "answer": "Parliament" },
+  { "question": "Which of the following elements is a metalloid?", "answer": "Silicon" },
+  { "question": "Which country has the Republic feature of the Indian Constitution been borrowed from?", "answer": "French Constitution" },
+  { "question": "Which of the following States has declared a social security scheme for registered newspaper hawkers in the State in 2021 considering the losses they faced during the pandemic?", "answer": "Odisha" },
+  { "question": "Which of the following is the main cause of land degradation in Jharkhand and Chhattisgarh?", "answer": "Deforestation due to mining" },
+  { "question": "The Accelerated Female Literacy Programme was initiated in districts where the female literacy rate, based on the 2001 census, was _______.", "answer": "below 35%" },
+  { "question": "As of 2021, which is the world's largest drainage basin with an area of about 7,000,000 km²?", "answer": "Amazon basin" },
+  { "question": "National Sports University is situated in ________.", "answer": "Manipur" },
+  { "question": "Which of the following characteristics is NOT of Aves?", "answer": "They give birth to live young ones" },
+  { "question": "In which of the following states is the development of rail transport less, due to its geographical conditions?", "answer": "Sikkim" },
+  { "question": "Which of the following books is INCORRECTLY paired with its respective author?", "answer": "The Discovery of India – Subhash Chandra Bose" },
+  { "question": "Who among the following was a poet who won Nobel Prize for literature in 1913?", "answer": "Rabindranath Tagore" },
+  { "question": "In which year was the National Institute of Kathak Dance established?", "answer": "1964" },
+  { "question": "Which of the following rivers is known as the Sorrow of Assam?", "answer": "Brahmaputra" },
+  { "question": "Which of the following is the smallest bone in the human body?", "answer": "Stapes" },
+  { "question": "Which one of the following is NOT a fundamental right in India?", "answer": "Right to Property" },
+  { "question": "In which of the following years did the Chauri Chaura incident take place?", "answer": "1922" },
+  { "question": "Which of the following countries shares its longest border with India?", "answer": "Bangladesh" },
+  { "question": "Who among the following was known as 'Punjab Kesari'?", "answer": "Lala Lajpat Rai" },
+  { "question": "What is the SI unit of pressure?", "answer": "Pascal" },
+  { "question": "Who was the first Governor-General of India?", "answer": "William Bentinck" },
+  { "question": "Which Article of the Indian Constitution deals with the Uniform Civil Code?", "answer": "Article 44" },
+  { "question": "In which year was the Planning Commission replaced by NITI Aayog?", "answer": "2015" }
+],
+"Page: 7": [
+  { "question": "What kind of radiation is absorbed by the ozone layer?", "answer": "Ultraviolet radiation" },
+  { "question": "Which organisation, divided into two branches, was established by Lokmanya Tilak and Annie Besant?", "answer": "Home Rule League" },
+  { "question": "In which of the following years did India NOT host the ICC Cricket World Cup Tournament?", "answer": "1983" },
+  { "question": "Ebony and Mahogany trees are found in which type of forests?", "answer": "Tropical evergreen forests" },
+  { "question": "Which of the following types of direct tax collection increased as of 10 February 2023 budget?", "answer": "Personal income tax" },
+  { "question": "Palladium on barium sulphate (Pd/BaSO4) is also known as:", "answer": "Rosenmund catalyst" },
+  { "question": "Which party formed the government in Britain in the year 1945?", "answer": "Labour Party" },
+  { "question": "When was the Duty-Free Tariff Preference Scheme for LDCs announced by India?", "answer": "2008" },
+  { "question": "Which Ghazal singer was conferred with the Deenanath Mangeshkar Award in April 2023?", "answer": "Pankaj Udhas" },
+  { "question": "In which year was the PM Ayushman Bharat Health Infrastructure Mission launched?", "answer": "2021" },
+  { "question": "Which of the following categories does Gonyaulax belong to?", "answer": "Dinoflagellates" },
+  { "question": "Who was the first Indian woman to win an Olympic medal?", "answer": "Karnam Malleswari" },
+  { "question": "Who wrote the book ‘India Wins Freedom’?", "answer": "Maulana Abul Kalam Azad" },
+  { "question": "In which Indian state is the Jaintia Hills located?", "answer": "Meghalaya" },
+  { "question": "Which river is known as the Dakshin Ganga?", "answer": "Godavari" },
+  { "question": "Who among the following built the Grand Trunk Road?", "answer": "Sher Shah Suri" },
+  { "question": "Which city is known as the 'City of Nawabs'?", "answer": "Lucknow" },
+  { "question": "What is the chemical symbol of silver?", "answer": "Ag" },
+  { "question": "Which dance form is associated with the state of Odisha?", "answer": "Odissi" },
+  { "question": "Who was the first woman President of the Indian National Congress?", "answer": "Annie Besant" },
+  { "question": "Which planet is known as the Red Planet?", "answer": "Mars" },
+  { "question": "Which vitamin helps in blood clotting?", "answer": "Vitamin K" },
+  { "question": "What is the full form of ISRO?", "answer": "Indian Space Research Organisation" },
+  { "question": "Which is the smallest continent on Earth?", "answer": "Australia" },
+  { "question": "Who was the founder of the Maurya Empire?", "answer": "Chandragupta Maurya" }
+],
+"Page: 8": [
+  { "question": "Taxus wallichiana Zucc (Himalayan yew) is a medicinal plant found in which of the following states?", "answer": "Himachal Pradesh" },
+  { "question": "Which of the following pairs is INCORRECTLY matched?", "answer": "Nucleus: Lipid metabolism" },
+  { "question": "Which of the following battles is considered the formal beginning of the British Raj in India?", "answer": "Battle of Buxar" },
+  { "question": "Which of the following Indian states has the least number of operational airports as of 2022?", "answer": "Mizoram" },
+  { "question": "Who among the following, while praising the amending feature of the Indian Constitution said that ‘This variety in the amending process is wise but is rarely found’?", "answer": "K C Wheare" },
+  { "question": "Tabla player, Ustad Zakir Hussain was awarded which of the following awards by the Government of India in 2023?", "answer": "Padma Vibhushan" },
+  { "question": "Gangu bai Hangal and Prabha Atre were exponents of the ___________ Gharana.", "answer": "Kirana" },
+  { "question": "Which of the following Indian athletes won the Zurich Diamond League final 2022 in September 2022?", "answer": "Neeraj Chopra" },
+  { "question": "Which of the following Table Tennis World Championship events was held in India?", "answer": "19th World Championships, 1952" },
+  { "question": "Which Article of the Indian Constitution provides for the protection of life and personal liberty?", "answer": "Article 21" },
+  { "question": "Who was the first Indian woman to win a Nobel Prize?", "answer": "Mother Teresa" },
+  { "question": "Which country shares the longest border with India?", "answer": "Bangladesh" },
+  { "question": "Who among the following founded the Indian National Army?", "answer": "Subhas Chandra Bose" },
+  { "question": "Which Mughal Emperor built the Red Fort?", "answer": "Shah Jahan" },
+  { "question": "Which Indian city is known as the 'Manchester of India'?", "answer": "Ahmedabad" },
+  { "question": "Which vitamin is produced by sunlight in the human body?", "answer": "Vitamin D" },
+  { "question": "What is the currency of Japan?", "answer": "Yen" },
+  { "question": "What is the chemical formula of water?", "answer": "H₂O" },
+  { "question": "Who discovered the electron?", "answer": "J. J. Thomson" },
+  { "question": "Which Indian state has the longest coastline?", "answer": "Gujarat" },
+  { "question": "In which year did India become a member of the United Nations?", "answer": "1945" },
+  { "question": "Which gas is used in fire extinguishers?", "answer": "Carbon dioxide" },
+  { "question": "Who was the last Governor-General of independent India?", "answer": "C. Rajagopalachari" },
+  { "question": "Which metal is liquid at room temperature?", "answer": "Mercury" },
+  { "question": "Which city is known as the Silicon Valley of India?", "answer": "Bengaluru" }
+],
+"Page: 9": [
+  { "question": "Who developed the theory of combustion as a chemical reaction with oxygen in the 18th century?", "answer": "Antoine Lavoisier" },
+  { "question": "What do we mean by Allen’s rule?", "answer": "Mammals from colder climates generally have shorter ears and limbs to minimise heat loss." },
+  { "question": "Which of the following schemes enables students mobility across Higher Education Institutions?", "answer": "Academic Bank of Credits" },
+  { "question": "Which of the following Constitutions inspired the law-making process in India?", "answer": "British Constitution" },
+  { "question": "Which of the following definitions best describes the concept of microfinance?", "answer": "Microfinance is a banking service provided to unemployed or low-income individuals or groups who otherwise would have no access to financial services." },
+  { "question": "Ernest Rutherford used about ________ thick gold foil for alpha scattering experiments.", "answer": "1000 atoms" },
+  { "question": "In May 2022, Then President Ram Nath Kovind appointed _________ as the Lieutenant Governor of Delhi.", "answer": "Vinai Kumar Saxena" },
+  { "question": "How many players are there on each side of the Kabaddi Team in the field?", "answer": "7" },
+  { "question": "Which of the following events took place in the United Provinces in February, 1922?", "answer": "Chauri Chaura" },
+  { "question": "Which Indian city is known as the 'City of Joy'?", "answer": "Kolkata" },
+  { "question": "What is the currency of Bangladesh?", "answer": "Taka" },
+  { "question": "Which Article of the Indian Constitution deals with the Fundamental Duties?", "answer": "Article 51A" },
+  { "question": "Which gas is known as laughing gas?", "answer": "Nitrous oxide" },
+  { "question": "Who was the first woman Governor of an Indian State?", "answer": "Sarojini Naidu" },
+  { "question": "Which is the largest freshwater lake in India?", "answer": "Wular Lake" },
+  { "question": "Who was the founder of the Arya Samaj?", "answer": "Swami Dayananda Saraswati" },
+  { "question": "In which year was the Indian Space Research Organisation (ISRO) founded?", "answer": "1969" },
+  { "question": "Which is the largest desert in the world?", "answer": "Sahara Desert" },
+  { "question": "Who discovered Penicillin?", "answer": "Alexander Fleming" },
+  { "question": "Which Indian state has the largest forest area?", "answer": "Madhya Pradesh" },
+  { "question": "Which Indian classical dance form originated in Andhra Pradesh?", "answer": "Kuchipudi" },
+  { "question": "Which Article of the Indian Constitution deals with the impeachment of the President?", "answer": "Article 61" },
+  { "question": "Which is the longest river in the world?", "answer": "Nile" },
+  { "question": "Who is known as the Father of the Indian Constitution?", "answer": "Dr. B.R. Ambedkar" },
+  { "question": "What is the capital of Canada?", "answer": "Ottawa" }
+],
+"Page: 10": [
+  { "question": "Who among the following is the world renowned exponent of the bamboo flute?", "answer": "Hariprasad Chaurasia" },
+  { "question": "What is net investment?", "answer": "Gross investment - depreciation" },
+  { "question": "India won the ICC Men Cricket World Cup for the first time in which of the following years?", "answer": "1983" },
+  { "question": "Kathakali, one of the classical dances of India, is predominantly performed in which of the following states?", "answer": "Kerala" },
+  { "question": "Identify the oldest iron and steel company of India from the following options.", "answer": "Tata Iron & Steel Company (TISCO)" },
+  { "question": "The magnificent Kailasa temple at Ellora was built during the reign of which Rashtrakuta king?", "answer": "Krishna I" },
+  { "question": "In which state/UT is the Hemis festival celebrated?", "answer": "Ladakh" },
+  { "question": "Which of the following is the largest artificial lake of Asia?", "answer": "Bhopal Lake" },
+  { "question": "In 2002, Zakir Hussain became the youngest percussionist to be honoured with which award?", "answer": "Padma Bhushan" },
+  { "question": "Microbes like Rhizobium, Nitrosomonas and Nitrobacter are used for:", "answer": "Nitrogen cycling" },
+  { "question": "With reference to the Sepoy Mutiny of 1857, on which date did the soldiers at Meerut start their journey to Delhi?", "answer": "10 May" },
+  { "question": "Who among the following was selected as the Sherpa for India’s G20 hosted in 2022-23?", "answer": "Amitabh Kant" },
+  { "question": "Purvanchal Himalayas does NOT comprise of:", "answer": "Pir Panjal range" },
+  { "question": "Which is the smallest planet in the Solar System?", "answer": "Mercury" },
+  { "question": "The famous ‘Harmandir Sahib’ (Golden Temple) is located in which Indian city?", "answer": "Amritsar" },
+  { "question": "Which gas is commonly known as marsh gas?", "answer": "Methane" },
+  { "question": "Which among the following is known as the ‘Father of the Indian Renaissance’?", "answer": "Raja Ram Mohan Roy" },
+  { "question": "Which Indian state is the largest producer of tea?", "answer": "Assam" },
+  { "question": "Who among the following composed the Indian National Anthem?", "answer": "Rabindranath Tagore" },
+  { "question": "Which of the following mountain ranges forms the northern boundary of India?", "answer": "Himalayas" },
+  { "question": "Which Article of the Indian Constitution deals with the Right to Education?", "answer": "Article 21A" },
+  { "question": "What is the chemical symbol of sodium?", "answer": "Na" },
+  { "question": "Who was the first Indian to go into space?", "answer": "Rakesh Sharma" },
+  { "question": "Which planet is known as the ‘Morning Star’?", "answer": "Venus" },
+  { "question": "In which state is the Sun Temple of Konark located?", "answer": "Odisha" }
+],
+"Page: 11": [
+  { "question": "Who among the following is the hero of the Sanskrit historical poem, the 'Ramacharita' written by Sandhyakar Nandi?", "answer": "Ramapala" },
+  { "question": "According to the Census of India 2011, which group of Union Territories recorded the highest sex ratio?", "answer": "Puducherry, Lakshadweep, Andaman and Nicobar Islands" },
+  { "question": "Which of the following two quantities have the same dimensions?", "answer": "Work and torque" },
+  { "question": "The Doctrine of Lapse was an annexation policy devised by which of the following Governor-Generals of India?", "answer": "Lord Dalhousie" },
+  { "question": "Which of the following is a man-made ecosystem?", "answer": "Aquarium" },
+  { "question": "Who among the following famous Indian women cricketers announced retirement in June 2022?", "answer": "Mithali Raj" },
+  { "question": "Which state government honoured Vani Jairam with the MS Subbulakshmi Award for 2019?", "answer": "Tamil Nadu" },
+  { "question": "Which region in India receives less rainfall in summer, but heavy rainfall in winter season due to the retreating north easterly winds?", "answer": "Eastern coastal region" },
+  { "question": "Which of the following are the two basic categories of an ecosystem?", "answer": "Terrestrial and Aquatic" },
+  { "question": "For which of the following states was the Constitution (Scheduled Castes and Scheduled Tribes) Orders (Second Amendment) Bill, 2022 introduced in the Parliament?", "answer": "Uttar Pradesh" },
+  { "question": "Which of the following features of the Indian Constitution was borrowed from the Irish Constitution?", "answer": "Directive Principles of State Policy" },
+  { "question": "The Supreme Court of India comprises the Chief Justice and not more than ______ other Judges appointed by the President of India.", "answer": "33" },
+  { "question": "Ranjana Gauhar was awarded the Padma Shri Award (2003) for her contribution to which of the following Indian dance forms?", "answer": "Odissi" },
+  { "question": "Who won the paralympic bronze medal in archery for India at Tokyo in 2020?", "answer": "Harvinder Singh" },
+  { "question": "Which of the following statements is correct about the composition of the agriculture sector and employment in GDP post-independence?", "answer": "The proportion of employment has declined significantly but not the share of the agriculture sector in GDP." },
+  { "question": "Which port is developed as a satellite port?", "answer": "Haldia" },
+  { "question": "Which polyatomic ionic compound is a white, crystalline powder used in fire extinguishers and to neutralise acids and bases?", "answer": "Sodium Bicarbonate" },
+  { "question": "Chhath Puja is the main festival of which state?", "answer": "Bihar" },
+  { "question": "Vindhyashakti was the founder of which of the following dynasties?", "answer": "Vakataka" },
+  { "question": "Which Indian singer wrote ‘Raag Sarita’?", "answer": "Chintaman Raghunath Vyas" },
+  { "question": "In which of the following areas did the Uprising of Khurda in 1817 take place?", "answer": "Odisha" },
+  { "question": "The central bank of India or Reserve Bank of India was created before Independence, in the year 1934. The recommendation to create a central bank was made by which commission?", "answer": "Hilton Young Commission" },
+  { "question": "Sundari trees are found in which type of forest?", "answer": "Mangrove forest" },
+  { "question": "Who founded the Prarthana Samaj in Bombay in 1867?", "answer": "Atmaram Pandurang" },
+  { "question": "Which of the following minerals is the ore of aluminium?", "answer": "Bauxite" }
+],
+"Page: 12": [
+  { "question": "After the fall of the Guptas, different kingdoms emerged in various parts of India. Among them, the Maukharis emerged in which of the following areas?", "answer": "Kannauj" },
+  { "question": "Which of the following nations won the ICC World Test Championship, defeating India, in 2023?", "answer": "Australia" },
+  { "question": "Presently, which of the following countries is NOT a beneficiary of India's Duty-Free Tariff Preference (DFTP) Scheme?", "answer": "Myanmar" },
+  { "question": "Which of the following Articles deals with the composition of the Rajya Sabha?", "answer": "Article 80" },
+  { "question": "In which year was Mahatma Gandhi born?", "answer": "1869" },
+  { "question": "What kind of phyllotaxy is observed in the Guava plant?", "answer": "Opposite" },
+  { "question": "The Nandi Award for Best Male Playback Singer was instituted by which state in the year 1977?", "answer": "Andhra Pradesh" },
+  { "question": "Indian Olympic Association was established in which of the following years?", "answer": "1927" },
+  { "question": "Which of the following is a public sector industry?", "answer": "BHEL" },
+  { "question": "Which of following is NOT a device of parliamentary proceedings?", "answer": "Full-day discussion" },
+  { "question": "Which of the following rivers marks the eastern-most boundary of the Himalayas?", "answer": "Brahmaputra" },
+  { "question": "What is the empirically fitted relationship between the rate of change of money, wage, and rate of unemployment known as?", "answer": "Philips curve" },
+  { "question": "Which of the following is India’s national academy of dance?", "answer": "Sangeet Natak Akademi" },
+  { "question": "Padma Bhushan awardee, Ustad Sabri Khan played which of the following musical instruments?", "answer": "Sarangi" },
+  { "question": "Transition elements are the elements that are found in Groups 3-12 of the modern periodic table, that constitute the _____?", "answer": "d-block" },
+  { "question": "A small object is placed on the focus on the left side of a convex lens. Where will the image be formed?", "answer": "At infinity on the right side of the lens" },
+  { "question": "One of the greatest Chola rulers Rajaraja I ruled from 985 AD to ______.", "answer": "1014 AD" },
+  { "question": "Who asked James Rennel to prepare the map of Hindustan?", "answer": "Warren Hastings" },
+  { "question": "Who was appointed as the new Chairman of Pension Fund Regulatory and Development Authority (PFRDA) in March 2023?", "answer": "Deepak Mohanty" },
+  { "question": "Indian National Army was formed in which of the following countries?", "answer": "Singapore" },
+  { "question": "Which of the following is NOT a component of a flower?", "answer": "Spines" },
+  { "question": "Where was the Hindu College established in the year 1791?", "answer": "Kolkata" },
+  { "question": "Where is the Gulf of Mannar located?", "answer": "Between the south-eastern tip of India and the eastern coast of Sri Lanka" },
+  { "question": "Who among the following won a Gold Medal at the 2021 World Cadet Wrestling Championship held in Budapest, Hungary?", "answer": "Priya Malik" },
+  { "question": "Which of the following is an example of a non-tax revenue source for the government?", "answer": "Fees and fines" }
+],
+"Page: 13": [
+  { "question": "Sangeet Natak Akademy Awardee Sulochana Chavan was a famous ________ singer.", "answer": "Lavani" },
+  { "question": "Which of the following plants is used to cure cold and cough?", "answer": "Tulsi" },
+  { "question": "Which is the colloquial term to describe the occurrence of pre-monsoon rains in India especially in parts of Kerala, Karnataka and Tamil Nadu?", "answer": "Mango showers" },
+  { "question": "The name ‘Piyadassi’ is associated with which Mauryan king?", "answer": "Ashoka" },
+  { "question": "The festival of ‘Rath Yatra’ of Puri in Odisha is dedicated to which deity?", "answer": "Lord Jagannath" },
+  { "question": "How many members are nominated by the President to the Rajya Sabha?", "answer": "12" },
+  { "question": "Which of the following is NOT the socio-economic objective of Industrial Policy Statement 1980?", "answer": "Allowing the maximum foreign direct investment" },
+  { "question": "In which year will India host the World Badminton Championship?", "answer": "2026" },
+  { "question": "Grignard reagent is represented as:", "answer": "CH3-Mg-Cl" },
+  { "question": "Which of the following crops is NOT grown during the Zaid season in India?", "answer": "Rice" },
+  { "question": "Who was the player of the match in the semi-final of the T20 Women's World Cup 2023 played between India and Australia?", "answer": "Ashleigh Gardner" },
+  { "question": "As per Article 123, the ordinance making power is the most important legislative power of ____________.", "answer": "President" },
+  { "question": "In which year was the Gandhi-Irwin Pact signed?", "answer": "1931" },
+  { "question": "Which of the following schemes was launched for the welfare of the unorganised sector workers and labourers on 26 August 2021?", "answer": "e-Shram Portal" },
+  { "question": "What is the SI unit of current?", "answer": "Ampere" },
+  { "question": "Which vitamin is also known as Ascorbic acid?", "answer": "Vitamin C" },
+  { "question": "Which river is known as the ‘Sorrow of Bengal’?", "answer": "Damodar River" },
+  { "question": "Who wrote the book ‘Poverty and Un-British Rule in India’?", "answer": "Dadabhai Naoroji" },
+  { "question": "In which state is the Kaziranga National Park located?", "answer": "Assam" },
+  { "question": "Who was the first Chief Election Commissioner of India?", "answer": "Sukumar Sen" },
+  { "question": "The instrument used to measure electric current is called?", "answer": "Ammeter" },
+  { "question": "The Vedic language is the ancestor of which language?", "answer": "Sanskrit" },
+  { "question": "Which one of the following is not a greenhouse gas?", "answer": "Oxygen" },
+  { "question": "Which Mughal ruler built Fatehpur Sikri?", "answer": "Akbar" },
+  { "question": "Which Article of the Indian Constitution deals with the protection of life and personal liberty?", "answer": "Article 21" }
+],
+"Page: 14": [
+  { "question": "Who founded the Arya Mahila Samaj?", "answer": "Pandita Ramabai" },
+  { "question": "Which Indian player won the World Rapid Chess Championship 2023?", "answer": "Koneru Humpy" },
+  { "question": "Which of the following is India’s oldest mountain range?", "answer": "Aravalli Range" },
+  { "question": "The International Court of Justice is located in which city?", "answer": "The Hague" },
+  { "question": "The National Income of India is estimated mainly by?", "answer": "Central Statistical Office (CSO)" },
+  { "question": "What is the capital of Finland?", "answer": "Helsinki" },
+  { "question": "The device used to measure humidity is called?", "answer": "Hygrometer" },
+  { "question": "Which Indian received the Nobel Peace Prize in 2014?", "answer": "Kailash Satyarthi" },
+  { "question": "Where is the headquarters of the International Atomic Energy Agency (IAEA) located?", "answer": "Vienna" },
+  { "question": "Which planet has the largest number of moons?", "answer": "Saturn" },
+  { "question": "Which vitamin helps in the clotting of blood?", "answer": "Vitamin K" },
+  { "question": "Where is the Hemis Monastery located?", "answer": "Ladakh" },
+  { "question": "Which dance form is associated with the state of Manipur?", "answer": "Manipuri" },
+  { "question": "The first session of the Indian National Congress was held in which city?", "answer": "Bombay (Mumbai)" },
+  { "question": "Which Mughal emperor built the Peacock Throne?", "answer": "Shah Jahan" },
+  { "question": "Which Indian city is known as the ‘Pink City’?", "answer": "Jaipur" },
+  { "question": "Who among the following was the founder of the Chola Empire?", "answer": "Vijayalaya Chola" },
+  { "question": "Which of the following is the hardest substance on Earth?", "answer": "Diamond" },
+  { "question": "Who discovered X-rays?", "answer": "Wilhelm Conrad Roentgen" },
+  { "question": "What is the capital of Mizoram?", "answer": "Aizawl" },
+  { "question": "What is the SI unit of power?", "answer": "Watt" },
+  { "question": "Who wrote the book ‘Discovery of India’?", "answer": "Jawaharlal Nehru" },
+  { "question": "In which state is the Bandipur National Park located?", "answer": "Karnataka" },
+  { "question": "Who was the first woman to become the Chief Minister of an Indian State?", "answer": "Sucheta Kripalani" },
+  { "question": "Which river flows through the city of Delhi?", "answer": "Yamuna" }
+],
+"Page: 15": [
+  { "question": "Which of the following is NOT a component of a flower?", "answer": "Spines" },
+  { "question": "Where was the Hindu College established in the year 1791?", "answer": "Kolkata" },
+  { "question": "Where is the Gulf of Mannar located?", "answer": "Between the south-eastern tip of India and the eastern coast of Sri Lanka" },
+  { "question": "Who among the following won a Gold Medal at the 2021 World Cadet Wrestling Championship held in Budapest, Hungary?", "answer": "Priya Malik" },
+  { "question": "Sangeet Kala Acharya Award is given by which organisation every year since 1993?", "answer": "Madras Music Academy" },
+  { "question": "Which of the following is an example of a non-tax revenue source for the government?", "answer": "Fees and fines" },
+  { "question": "Sangeet Natak Akademi Awardee Sulochana Chavan was a famous ________ singer.", "answer": "Lavani" },
+  { "question": "Which of the following plants is used to cure cold and cough?", "answer": "Tulsi" },
+  { "question": "Which is the colloquial term to describe the occurrence of pre-monsoon rains in India especially in parts of Kerala, Karnataka and Tamil Nadu?", "answer": "Mango showers" },
+  { "question": "The name ‘Piyadassi’ is associated with whom among the following Mauryan kings?", "answer": "Ashoka" },
+  { "question": "The festival of ‘Rath Yatra’ of Puri in Odisha is dedicated to which deity?", "answer": "Lord Jagannath" },
+  { "question": "How many members are nominated by the President to the Rajya Sabha?", "answer": "12" },
+  { "question": "Which of the following is NOT the socio-economic objective of Industrial Policy Statement 1980?", "answer": "Allowing the maximum foreign direct investment" },
+  { "question": "In which of the following years will India host the World Badminton Championship?", "answer": "2026" },
+  { "question": "Grignard reagent is represented as:", "answer": "CH3-Mg-Cl" },
+  { "question": "Which of the following crops is NOT grown during the Zaid season in India?", "answer": "Rice" },
+  { "question": "Who was the player of the match in the semi-final of the T20 Women's World Cup 2023 played between India and Australia?", "answer": "Ashleigh Gardner" },
+  { "question": "As per article 123, the ordinance making power is the most important legislative power of ____________.", "answer": "President" },
+  { "question": "In which year was the Gandhi-Irwin Pact signed?", "answer": "1931" },
+  { "question": "Which of the following schemes was launched for the welfare of the unorganised sector workers and labourers on 26 August 2021?", "answer": "e-Shram Portal" },
+  { "question": "What is the SI unit of current?", "answer": "Ampere" },
+  { "question": "Name a common electrolyte disorder that occurs when the amount of sodium in the body is abnormally low.", "answer": "Hyponatremia" },
+  { "question": "Which of the following is the national tree of India?", "answer": "Banyan Tree" },
+  { "question": "Who was the founder of the Gupta Empire?", "answer": "Sri Gupta" },
+  { "question": "Which planet is known as the ‘Blue Planet’?", "answer": "Earth" }
+],
+"Page: 16": [
+  { "question": "Which of the following is the largest delta in the world?", "answer": "Sundarbans Delta" },
+  { "question": "Who among the following founded the Maurya Empire?", "answer": "Chandragupta Maurya" },
+  { "question": "The term ‘Green Revolution’ was first used by:", "answer": "William S. Gaud" },
+  { "question": "In which state is the Garo Hills located?", "answer": "Meghalaya" },
+  { "question": "Who was the first Indian to win an individual Olympic gold medal?", "answer": "Abhinav Bindra" },
+  { "question": "Which river is also known as the ‘Dakshin Ganga’?", "answer": "Godavari" },
+  { "question": "In which year was the Planning Commission replaced by NITI Aayog?", "answer": "2015" },
+  { "question": "Which vitamin is also known as Retinol?", "answer": "Vitamin A" },
+  { "question": "The Battle of Plassey was fought in which year?", "answer": "1757" },
+  { "question": "Who among the following is known as the ‘Iron Man of India’?", "answer": "Sardar Vallabhbhai Patel" },
+  { "question": "Which planet is known as the ‘Morning Star’?", "answer": "Venus" },
+  { "question": "Which of the following is the national aquatic animal of India?", "answer": "Gangetic Dolphin" },
+  { "question": "What is the SI unit of frequency?", "answer": "Hertz" },
+  { "question": "The first session of the Indian National Congress was held in which city?", "answer": "Bombay (Mumbai)" },
+  { "question": "Which Indian city is known as the ‘City of Lakes’?", "answer": "Udaipur" },
+  { "question": "Which among the following is a major port located on the eastern coast of India?", "answer": "Kolkata Port" },
+  { "question": "Which of the following rivers originates from the Amarkantak Plateau?", "answer": "Narmada" },
+  { "question": "Who among the following composed the song ‘Sare Jahan Se Achha’?", "answer": "Muhammad Iqbal" },
+  { "question": "In which year did the Jallianwala Bagh massacre take place?", "answer": "1919" },
+  { "question": "Who discovered the law of gravitation?", "answer": "Isaac Newton" },
+  { "question": "Which Indian state has the longest coastline?", "answer": "Gujarat" },
+  { "question": "The Khajuraho Temples were built by which dynasty?", "answer": "Chandela" },
+  { "question": "Which of the following is the smallest planet in the Solar System?", "answer": "Mercury" },
+  { "question": "Who among the following was the first Governor-General of independent India?", "answer": "C. Rajagopalachari" },
+  { "question": "What is the full form of GDP?", "answer": "Gross Domestic Product" }
+],
+"Page: 17": [
+  { "question": "Which Mughal emperor built the Red Fort?", "answer": "Shah Jahan" },
+  { "question": "Which Indian city is called the ‘City of Joy’?", "answer": "Kolkata" },
+  { "question": "The concept of Fundamental Duties was borrowed from the Constitution of which country?", "answer": "USSR (now Russia)" },
+  { "question": "Which festival marks the beginning of the harvesting season in Punjab?", "answer": "Baisakhi" },
+  { "question": "Who was the founder of the Indian Space Research Organisation (ISRO)?", "answer": "Dr. Vikram Sarabhai" },
+  { "question": "Which river flows through the Sundarbans delta?", "answer": "Ganga" },
+  { "question": "Which city is known as the ‘Manchester of South India’?", "answer": "Coimbatore" },
+  { "question": "In which year did the Quit India Movement start?", "answer": "1942" },
+  { "question": "Which planet is known as the Red Planet?", "answer": "Mars" },
+  { "question": "Who was the first President of India?", "answer": "Dr. Rajendra Prasad" },
+  { "question": "What is the chemical symbol of gold?", "answer": "Au" },
+  { "question": "Which of the following is the highest civilian award of India?", "answer": "Bharat Ratna" },
+  { "question": "Who among the following gave the slogan ‘Do or Die’?", "answer": "Mahatma Gandhi" },
+  { "question": "Which river is known as the Sorrow of Bihar?", "answer": "Kosi" },
+  { "question": "Which Indian state has the largest area?", "answer": "Rajasthan" },
+  { "question": "Who was the first Indian woman to win a gold medal in Asian Games?", "answer": "Kamaljit Sandhu" },
+  { "question": "What is the capital of Sri Lanka?", "answer": "Colombo" },
+  { "question": "Which Mughal ruler introduced the ‘Din-i-Ilahi’?", "answer": "Akbar" },
+  { "question": "Which gas is essential for photosynthesis?", "answer": "Carbon dioxide" },
+  { "question": "Who wrote the book ‘Discovery of India’?", "answer": "Jawaharlal Nehru" },
+  { "question": "In which state is the Meenakshi Temple located?", "answer": "Tamil Nadu" },
+  { "question": "Which vitamin helps in blood clotting?", "answer": "Vitamin K" },
+  { "question": "Who was the founder of the Mughal Empire?", "answer": "Babur" },
+  { "question": "Which is the largest freshwater lake in India?", "answer": "Wular Lake" },
+  { "question": "Which Indian state is known as the ‘Spice Garden of India’?", "answer": "Kerala" }
+],
+"Page: 18": [
+  { "question": "The Drought Prone Area Programme (DPAP) was started during which Five-Year Plan?", "answer": "Fourth Five-Year Plan" },
+  { "question": "‘Padayani’ is a traditional dance form of which Indian state?", "answer": "Kerala" },
+  { "question": "Which number is called Avogadro’s constant?", "answer": "6.022 × 10^23" },
+  { "question": "The Dead Sea is located between which two countries?", "answer": "Israel and Jordan" },
+  { "question": "Which river flows eastward into the Bay of Bengal?", "answer": "Godavari" },
+  { "question": "Who introduced the Daroga system in India in 1792?", "answer": "Lord Cornwallis" },
+  { "question": "Chariot festival is dedicated to Lord Jagannath, Subhadra, and _______.", "answer": "Balabhadra" },
+  { "question": "Filtration units present inside the kidneys are called?", "answer": "Nephrons" },
+  { "question": "Who was known as the ‘Father of Local Self-Government in India’?", "answer": "Lord Ripon" },
+  { "question": "In which state is the Keibul Lamjao National Park located?", "answer": "Manipur" },
+  { "question": "Which gas is known as laughing gas?", "answer": "Nitrous oxide" },
+  { "question": "In which year did India adopt the Goods and Services Tax (GST)?", "answer": "2017" },
+  { "question": "What is the currency of Bangladesh?", "answer": "Taka" },
+  { "question": "Who was the first woman Governor of an Indian state?", "answer": "Sarojini Naidu" },
+  { "question": "Which vitamin deficiency causes night blindness?", "answer": "Vitamin A" },
+  { "question": "Who was the first Indian to go into space?", "answer": "Rakesh Sharma" },
+  { "question": "What is the capital of Bhutan?", "answer": "Thimphu" },
+  { "question": "Which of the following is a renewable source of energy?", "answer": "Solar energy" },
+  { "question": "Who is known as the ‘Missile Man of India’?", "answer": "Dr. A.P.J. Abdul Kalam" },
+  { "question": "Which Indian city is famous for its Diamond Industry?", "answer": "Surat" },
+  { "question": "Which element is essential for the formation of bones and teeth?", "answer": "Calcium" },
+  { "question": "Who was the founder of the Indian National Army?", "answer": "Subhas Chandra Bose" },
+  { "question": "Which Indian city is known as the Silicon Valley of India?", "answer": "Bengaluru" },
+  { "question": "What is the SI unit of Force?", "answer": "Newton" },
+  { "question": "In which state is the Kaziranga National Park located?", "answer": "Assam" }
+],
+"Page: 19": [
+  { "question": "Which of the following Articles deals with the Right to Equality?", "answer": "Article 14" },
+  { "question": "Which of the following is the oldest Veda?", "answer": "Rigveda" },
+  { "question": "Which gas is used in the preparation of soda water?", "answer": "Carbon dioxide" },
+  { "question": "What is the capital of Arunachal Pradesh?", "answer": "Itanagar" },
+  { "question": "Who was the last Governor-General of independent India?", "answer": "C. Rajagopalachari" },
+  { "question": "Which Indian freedom fighter founded the ‘Azad Hind Fauj’?", "answer": "Subhas Chandra Bose" },
+  { "question": "Who discovered Penicillin?", "answer": "Alexander Fleming" },
+  { "question": "Which Indian scientist invented the Crescograph?", "answer": "J.C. Bose" },
+  { "question": "What is the chemical symbol of iron?", "answer": "Fe" },
+  { "question": "Who was the first woman Prime Minister of India?", "answer": "Indira Gandhi" },
+  { "question": "In which year did India gain independence?", "answer": "1947" },
+  { "question": "Who was the first Indian Nobel Laureate?", "answer": "Rabindranath Tagore" },
+  { "question": "Which of the following is NOT a Fundamental Right?", "answer": "Right to Property" },
+  { "question": "Which mountain range separates Europe from Asia?", "answer": "Ural Mountains" },
+  { "question": "Which Indian state is known as the ‘Land of Five Rivers’?", "answer": "Punjab" },
+  { "question": "What is the currency of Japan?", "answer": "Yen" },
+  { "question": "Which is the largest planet in our solar system?", "answer": "Jupiter" },
+  { "question": "Who among the following built the Qutub Minar?", "answer": "Qutb-ud-din Aibak" },
+  { "question": "Which element is necessary for the process of photosynthesis?", "answer": "Carbon dioxide" },
+  { "question": "Which organ in the human body purifies blood?", "answer": "Kidney" },
+  { "question": "Who was the founder of the Mughal Empire?", "answer": "Babur" },
+  { "question": "Which festival is also known as the ‘Festival of Lights’?", "answer": "Diwali" },
+  { "question": "What is the SI unit of work?", "answer": "Joule" },
+  { "question": "Which country shares the longest border with India?", "answer": "Bangladesh" },
+  { "question": "Which Indian state is known as the ‘Land of Rising Sun’?", "answer": "Arunachal Pradesh" }
+],
+"Page: 20": [
+  { "question": "The Drought Prone Area Programme (DPAP) for providing employment to people in drought prone areas was started during which Five-Year Plan?", "answer": "Fourth Five-Year Plan" },
+  { "question": "‘Padayani’ is a local dance form primarily performed in which state to please Goddess Bhadrakali?", "answer": "Kerala" },
+  { "question": "Which Indian musician from Maharashtra received the Padma Vibhushan 2023?", "answer": "Zakir Hussain" },
+  { "question": "Raja Bhalindra Singh Trophy is associated with which national sports event?", "answer": "National Games" },
+  { "question": "The renowned ghazal singer Girija Devi was born in which state?", "answer": "Uttar Pradesh" },
+  { "question": "How was the growth in all food grains after the Green Revolution?", "answer": "Disproportionate" },
+  { "question": "Which of the following is NOT a feature of the Indian Constitution?", "answer": "Dual Citizenship" },
+  { "question": "The Epidemic Diseases (Amendment) Ordinance, 2020 amended which Act?", "answer": "The Epidemic Diseases Act, 1897" },
+  { "question": "Under the ‘Mero Rukh Mero Santati’ initiative launched in Sikkim, how many trees will be planted for every child born?", "answer": "100" },
+  { "question": "Filtration units in human kidneys are called?", "answer": "Nephrons" },
+  { "question": "Which number is called Avogadro's constant?", "answer": "6.022 × 10^23" },
+  { "question": "Which branch of ecology deals with ancient environment and their relationship with ancient plants and animals?", "answer": "Paleoecology" },
+  { "question": "Which of the following is a landlocked Salt Lake in South-West Asia between Israel and Jordan?", "answer": "Dead Sea" },
+  { "question": "Which of the following rivers is an east-flowing river?", "answer": "Godavari" },
+  { "question": "The Daroga system in 1792 was introduced by which Governor-General?", "answer": "Lord Cornwallis" },
+  { "question": "Chariot festival is dedicated to Lord Jagannath along with Subhadra and _______.", "answer": "Balabhadra" },
+  { "question": "What correctly defines change of inventories of a firm during a year?", "answer": "Production of the firm during the year – Sale of the firm during the year" },
+  { "question": "Which Article of the Indian Constitution deals with the impeachment of the President?", "answer": "Article 61" },
+  { "question": "Which country is known as the ‘Land of the Rising Sun’?", "answer": "Japan" },
+  { "question": "In which state is the Bhitarkanika National Park located?", "answer": "Odisha" },
+  { "question": "Who invented the electric bulb?", "answer": "Thomas Alva Edison" },
+  { "question": "What is the chemical symbol of silver?", "answer": "Ag" },
+  { "question": "Which vitamin is known as Calciferol?", "answer": "Vitamin D" },
+  { "question": "Who among the following founded the Prarthana Samaj?", "answer": "Atmaram Pandurang" },
+  { "question": "Which Indian state has the largest forest area?", "answer": "Madhya Pradesh" }
+],
+"Page: 21": [
+  { "question": "Which of the following is the provision of small credit to those who have no other access to financial services?", "answer": "Microfinance" },
+  { "question": "The variation between a high air temperature and a low temperature that occurs during the same day is called _______ temperature.", "answer": "Diurnal" },
+  { "question": "Agricultural shot is a term used in which of the following sports?", "answer": "Lawn Tennis" },
+  { "question": "In peninsular India, which of the following kingdoms ruled over northern Maharashtra and Vidarbha?", "answer": "Vakatakas" },
+  { "question": "Which of the following is the best definition of ecological efficiency?", "answer": "The ratio between energy flows at different points in a food chain" },
+  { "question": "Articles 245 to 255 in Part XI of the Indian Constitution deal with:", "answer": "Legislative relations between the Centre and the States" },
+  { "question": "In which group of states does the Luni River flow?", "answer": "Rajasthan and Gujarat" },
+  { "question": "Which Chief Minister launched the 'Kaushalya Matritva Yojana' in 2022 for women giving birth to a second girl child?", "answer": "Chhattisgarh" },
+  { "question": "For a chemical reaction with a rise in temperature by 10°, the rate constant becomes nearly:", "answer": "Double" },
+  { "question": "In which year was VD Savarkar sent to Andaman Jail by the British?", "answer": "1911" },
+  { "question": "What is the disinvestment target of the Finance Ministry for 2023-24?", "answer": "₹51,000 crore" },
+  { "question": "Pandwani singer Usha Barle was conferred with which award in 2023?", "answer": "Padma Shri" },
+  { "question": "Which of the following is an example of prokaryotic cells?", "answer": "Bacteria" },
+  { "question": "As per Mendeleev’s prediction, atomic mass of eka-aluminium was:", "answer": "68" },
+  { "question": "Which Indian musician and sitar player founded the National Orchestra of India?", "answer": "Ravi Shankar" },
+  { "question": "Which committee identified legal provisions for implementing some Fundamental Duties?", "answer": "Justice Verma Committee" },
+  { "question": "Where was the first official summit of the Non-Aligned Movement held?", "answer": "Yugoslavia" },
+  { "question": "Gandharva Mahavidyalaya, founded by Pandit Vinaya Chandra Maudgalya, is located at:", "answer": "New Delhi" },
+  { "question": "Which document provides the framework for setting up public and private industries in India?", "answer": "Industrial Policy" },
+  { "question": "In chess, which piece moves only forward to the unoccupied square immediately in front of it?", "answer": "The Pawn" },
+  { "question": "Mulayam Singh Yadav served as the Chief Minister of which state?", "answer": "Uttar Pradesh" },
+  { "question": "Which is the second largest planet in the Solar System?", "answer": "Saturn" },
+  { "question": "The ‘Mekong-Ganga Cooperation’ initiative was launched in which year?", "answer": "2000" },
+  { "question": "Which vitamin is essential for blood coagulation?", "answer": "Vitamin K" },
+  { "question": "In which year did India adopt the Constitution?", "answer": "1949" }
+],
+"Page: 22": [
+  { "question": "Which state government launched the 'Ankur' scheme in 2021 to promote tree plantation?", "answer": "Madhya Pradesh" },
+  { "question": "In the Right-Hand Thumb Rule, the thumb indicates the direction of:", "answer": "Current" },
+  { "question": "Which Articles of the Indian Constitution cannot be suspended even during an emergency?", "answer": "Articles 20 and 21" },
+  { "question": "Which is the largest inhabited riverine island in the world?", "answer": "Majuli" },
+  { "question": "In which year was the Battle of Buxar fought?", "answer": "1764" },
+  { "question": "What was the main objective of the Second Green Revolution in India?", "answer": "Holistic development in agriculture" },
+  { "question": "Who was the youngest recipient of the Sangeetha Kalanidhi Award in 1947?", "answer": "Semmangudi Radhakrishna Srinivasa Iyer" },
+  { "question": "In Newlands’ Octaves, the properties of lithium and ______ were found to be similar.", "answer": "Sodium" },
+  { "question": "Which web portal provides data on mobile towers and EMF emission compliance?", "answer": "Tarang Sanchar" },
+  { "question": "Which Act passed under Warren Hastings was called the 'half-loaf system'?", "answer": "Regulating Act 1773" },
+  { "question": "Which Article mentions that the State shall promote cottage industries?", "answer": "Article 43" },
+  { "question": "Which Article provides for President’s Rule in a state?", "answer": "Article 356" },
+  { "question": "In 1539, the Battle of Chausa was fought between Humayun and:", "answer": "Sher Shah Suri" },
+  { "question": "India hosted the Asian Games in which years?", "answer": "1951 and 1982" },
+  { "question": "A dense mass of water drops on dust particles in lower atmosphere is called:", "answer": "Mist" },
+  { "question": "Sardhana Christian Fair is held in which state?", "answer": "Uttar Pradesh" },
+  { "question": "Ali Akbar Khan belonged to which gharana?", "answer": "Maihar Gharana" },
+  { "question": "Which movement created regional disparities between farmers in India?", "answer": "Green Revolution" },
+  { "question": "Elelakkaradi dance of Kerala is performed by which tribe?", "answer": "Kurumba tribe" },
+  { "question": "The Vande Bharat Express was first launched between which two cities?", "answer": "New Delhi and Varanasi" },
+  { "question": "In which year was ISRO established?", "answer": "1969" },
+  { "question": "Which Article of the Constitution provides for Fundamental Duties?", "answer": "Article 51A" },
+  { "question": "Which Indian classical dance is associated with Assam?", "answer": "Sattriya" },
+  { "question": "The United Nations Day is observed every year on:", "answer": "24 October" },
+  { "question": "Which river is known as the ‘Lifeline of Madhya Pradesh’?", "answer": "Narmada" }
+],
+"Page: 23": [
+  { "question": "The National Youth Policy was launched in which year?", "answer": "2014" },
+  { "question": "Which among the following was NOT a section of the Rigvedic tribe?", "answer": "Craftsmen" },
+  { "question": "Who holds the record for the longest long jump in India (2023)?", "answer": "Jeswin Aldrin" },
+  { "question": "Which part of the Constitution deals with Panchayats?", "answer": "Part IX" },
+  { "question": "Which battle was fought between Babur and Rana Sanga in 1527?", "answer": "Battle of Khanwa" },
+  { "question": "Who presided over the Belgaum Session of Congress in 1924?", "answer": "Mahatma Gandhi" },
+  { "question": "‘Atla Taddi’ is a festival celebrated in which Indian state?", "answer": "Andhra Pradesh" },
+  { "question": "Where was the 1st World Cup of Kabaddi held in 2004?", "answer": "Punjab" },
+  { "question": "Hojagiri dance is performed in which state?", "answer": "Tripura" },
+  { "question": "The leaf arrangement in neem is called:", "answer": "Pinnately" },
+  { "question": "What is India’s position in the global telecom market as of March 2024?", "answer": "Second" },
+  { "question": "Which National Park in Andaman and Nicobar is home to Nicobar Pigeon and Giant Robber Crab?", "answer": "Campbell Bay National Park" },
+  { "question": "A chemical reaction whose rate depends on the first power of concentration is called:", "answer": "First order reaction" },
+  { "question": "For which film did Asha Bhosle win the IIFA Award in 2002?", "answer": "Lagaan" },
+  { "question": "Which state allocated ₹11,728 crore for the Aasara pension scheme (2022-23)?", "answer": "Telangana" },
+  { "question": "The Permanent Settlement came into operation in which year?", "answer": "1793" },
+  { "question": "Online Dispute Resolution (ODR) is based on which method?", "answer": "Mediation and Arbitration" },
+  { "question": "What is mentioned in Article 1 of the Indian Constitution?", "answer": "India that is Bharat shall be a Union of States" },
+  { "question": "The Flexible Inflation Targeting Framework (FITF) was introduced in which year?", "answer": "2016" },
+  { "question": "What is the duration of the monsoon in India?", "answer": "100–120 days" },
+  { "question": "Articles 52 to 78 in Part V deal with:", "answer": "Union Executive" },
+  { "question": "Ali Akbar Khan was known for playing which instrument?", "answer": "Sarod" },
+  { "question": "Which of the following is not part of the northern plains river system?", "answer": "Godavari" },
+  { "question": "The bending of light around small objects is known as:", "answer": "Diffraction" },
+  { "question": "The first general elections in India were held in which year?", "answer": "1951–52" }
+],
+"Page: 24": [
+  { "question": "Which of the following festivals is celebrated as the Assamese New Year?", "answer": "Bihu" },
+  { "question": "The ‘Harappan Civilization’ is also known as?", "answer": "Indus Valley Civilization" },
+  { "question": "Which Article of the Constitution deals with the protection of life and personal liberty?", "answer": "Article 21" },
+  { "question": "Who is known as the ‘Father of the Indian Constitution’?", "answer": "Dr. B. R. Ambedkar" },
+  { "question": "Which is the highest peak in India?", "answer": "Kanchenjunga" },
+  { "question": "Who among the following is known as the ‘Nightingale of India’?", "answer": "Sarojini Naidu" },
+  { "question": "Which is the largest state of India by area?", "answer": "Rajasthan" },
+  { "question": "The Sunderbans are famous for which animal?", "answer": "Royal Bengal Tiger" },
+  { "question": "Which is the smallest continent in the world?", "answer": "Australia" },
+  { "question": "In which year was the Indian National Congress founded?", "answer": "1885" },
+  { "question": "Who was the first woman President of India?", "answer": "Pratibha Patil" },
+  { "question": "Which gas is used for respiration by humans?", "answer": "Oxygen" },
+  { "question": "Which Mughal ruler built the Taj Mahal?", "answer": "Shah Jahan" },
+  { "question": "The headquarters of the United Nations is located in:", "answer": "New York" },
+  { "question": "Who among the following discovered the sea route to India via the Cape of Good Hope?", "answer": "Vasco da Gama" },
+  { "question": "Which organ in the human body is responsible for pumping blood?", "answer": "Heart" },
+  { "question": "Which planet is known as the ‘Blue Planet’?", "answer": "Earth" },
+  { "question": "Who was the first woman to receive the Bharat Ratna?", "answer": "Indira Gandhi" },
+  { "question": "What is the capital of France?", "answer": "Paris" },
+  { "question": "Which river is known as the ‘Sorrow of Bengal’?", "answer": "Damodar River" },
+  { "question": "Who wrote the book ‘Arthashastra’?", "answer": "Chanakya" },
+  { "question": "In which state is the Gir National Park located?", "answer": "Gujarat" },
+  { "question": "Which vitamin helps in the absorption of calcium?", "answer": "Vitamin D" },
+  { "question": "Who was the founder of Buddhism?", "answer": "Gautama Buddha" },
+  { "question": "Which city is known as the ‘City of Pearls’?", "answer": "Hyderabad" }
+],
+"Page: 25": [
+  { "question": "Who was the first woman Prime Minister of India?", "answer": "Indira Gandhi" },
+  { "question": "Which Indian scientist gave the law of motion?", "answer": "Isaac Newton" },
+  { "question": "Who is the author of the book ‘Wings of Fire’?", "answer": "Dr. A.P.J. Abdul Kalam" },
+  { "question": "The ‘Battle of Panipat’ was fought in which year?", "answer": "1526" },
+  { "question": "Which state is known as the ‘Land of Rising Sun’?", "answer": "Arunachal Pradesh" },
+  { "question": "Which organ purifies blood in the human body?", "answer": "Kidneys" },
+  { "question": "Who was the first Indian to win a Nobel Prize?", "answer": "Rabindranath Tagore" },
+  { "question": "The longest river in the world is:", "answer": "Nile" },
+  { "question": "Which festival is known as the ‘Festival of Colors’?", "answer": "Holi" },
+  { "question": "Which Mughal ruler built the Jama Masjid?", "answer": "Shah Jahan" },
+  { "question": "Who among the following was known as the ‘Frontier Gandhi’?", "answer": "Khan Abdul Ghaffar Khan" },
+  { "question": "Which planet is known as the ‘Morning Star’?", "answer": "Venus" },
+  { "question": "What is the SI unit of pressure?", "answer": "Pascal" },
+  { "question": "Which river flows through Delhi?", "answer": "Yamuna" },
+  { "question": "In which year did India become a Republic?", "answer": "1950" },
+  { "question": "Which vitamin deficiency causes rickets?", "answer": "Vitamin D" },
+  { "question": "Which gas is known as laughing gas?", "answer": "Nitrous Oxide" },
+  { "question": "Who was the founder of the Mughal Empire?", "answer": "Babur" },
+  { "question": "Which Indian city is called the ‘Pink City’?", "answer": "Jaipur" },
+  { "question": "Which is the national flower of India?", "answer": "Lotus" },
+  { "question": "The headquarters of the Reserve Bank of India is located in:", "answer": "Mumbai" },
+  { "question": "Which is the largest desert in the world?", "answer": "Sahara Desert" },
+  { "question": "Which Indian freedom fighter gave the slogan ‘Inquilab Zindabad’?", "answer": "Bhagat Singh" },
+  { "question": "Which of the following planets has rings around it?", "answer": "Saturn" },
+  { "question": "Which Indian monument is called the ‘Symbol of Love’?", "answer": "Taj Mahal" }
+],
+"Page: 26": [
+  { "question": "Which of the following is NOT a metallic mineral?", "answer": "Mica" },
+  { "question": "Who among the following founded the Ramakrishna Mission?", "answer": "Swami Vivekananda" },
+  { "question": "Which is the largest freshwater lake in the world?", "answer": "Lake Superior" },
+  { "question": "In which year was the Battle of Plassey fought?", "answer": "1757" },
+  { "question": "Who was the first Indian woman to climb Mount Everest?", "answer": "Bachendri Pal" },
+  { "question": "What is the capital of Canada?", "answer": "Ottawa" },
+  { "question": "Which Article of the Indian Constitution deals with the right to equality?", "answer": "Article 14" },
+  { "question": "Who discovered the sea route to India?", "answer": "Vasco da Gama" },
+  { "question": "Which Mughal emperor introduced the Din-i-Ilahi?", "answer": "Akbar" },
+  { "question": "Which city is known as the ‘Gateway of India’?", "answer": "Mumbai" },
+  { "question": "In which state is the Gir National Park located?", "answer": "Gujarat" },
+  { "question": "What is the SI unit of electric current?", "answer": "Ampere" },
+  { "question": "Which Indian scientist discovered the Raman Effect?", "answer": "C. V. Raman" },
+  { "question": "Who was the first Indian Governor-General of independent India?", "answer": "C. Rajagopalachari" },
+  { "question": "The outermost layer of the Earth is called?", "answer": "Crust" },
+  { "question": "In which year did India host the first Asian Games?", "answer": "1951" },
+  { "question": "Which of the following is a renewable source of energy?", "answer": "Solar energy" },
+  { "question": "Who among the following gave the slogan 'Inquilab Zindabad'?", "answer": "Bhagat Singh" },
+  { "question": "Which is the national aquatic animal of India?", "answer": "Gangetic Dolphin" },
+  { "question": "Who is known as the ‘Father of the Indian Constitution’?", "answer": "Dr. B. R. Ambedkar" },
+  { "question": "Which state has the highest population in India as per Census 2011?", "answer": "Uttar Pradesh" },
+  { "question": "What is the capital of Sikkim?", "answer": "Gangtok" },
+  { "question": "Which Indian freedom fighter was also known as Netaji?", "answer": "Subhas Chandra Bose" },
+  { "question": "Which metal is liquid at room temperature?", "answer": "Mercury" },
+  { "question": "Who was the first Indian to win an Oscar?", "answer": "Bhanu Athaiya" }
+],
+"Page: 27": [
+  { "question": "Which of the following rivers originates from Amarkantak?", "answer": "Narmada" },
+  { "question": "Who among the following was the first woman Governor of an Indian state?", "answer": "Sarojini Naidu" },
+  { "question": "In which year did the Jallianwala Bagh massacre take place?", "answer": "1919" },
+  { "question": "The headquarters of ISRO is located at:", "answer": "Bengaluru" },
+  { "question": "Who was the first Indian to go to space?", "answer": "Rakesh Sharma" },
+  { "question": "Which city is known as the ‘Silicon Valley of India’?", "answer": "Bengaluru" },
+  { "question": "Which river is known as the ‘Sorrow of Bihar’?", "answer": "Kosi River" },
+  { "question": "Who was the first Indian President to die in office?", "answer": "Dr. Zakir Hussain" },
+  { "question": "Which Indian scientist is known as the 'Missile Man of India'?", "answer": "Dr. A.P.J. Abdul Kalam" },
+  { "question": "What is the capital of Mizoram?", "answer": "Aizawl" },
+  { "question": "Which Mughal ruler built the Red Fort?", "answer": "Shah Jahan" },
+  { "question": "Which Indian cricketer was known as the 'Little Master'?", "answer": "Sunil Gavaskar" },
+  { "question": "Which Article provides for Fundamental Duties?", "answer": "Article 51A" },
+  { "question": "The largest planet in our solar system is:", "answer": "Jupiter" },
+  { "question": "Who was the founder of the Maurya Empire?", "answer": "Chandragupta Maurya" },
+  { "question": "In which year did the Quit India Movement begin?", "answer": "1942" },
+  { "question": "Which vitamin helps in blood clotting?", "answer": "Vitamin K" },
+  { "question": "Which Indian state is known as the 'Land of Five Rivers'?", "answer": "Punjab" },
+  { "question": "The Rajya Sabha is presided over by:", "answer": "Vice President of India" },
+  { "question": "What is the SI unit of power?", "answer": "Watt" },
+  { "question": "Who was the first Indian woman to win an Olympic medal?", "answer": "Karnam Malleswari" },
+  { "question": "Which is the smallest Union Territory of India?", "answer": "Lakshadweep" },
+  { "question": "What is the chemical symbol of sodium?", "answer": "Na" },
+  { "question": "Which Indian city is known as the ‘City of Lakes’?", "answer": "Udaipur" },
+  { "question": "Who among the following founded the Arya Samaj?", "answer": "Swami Dayanand Saraswati" }
+],
+"Page: 28": [
+  { "question": "Which of the following metals is used in making aircraft bodies?", "answer": "Aluminium" },
+  { "question": "Which Indian leader gave the slogan 'Jai Jawan Jai Kisan'?", "answer": "Lal Bahadur Shastri" },
+  { "question": "Which is the national bird of India?", "answer": "Peacock" },
+  { "question": "Who wrote the national anthem of India?", "answer": "Rabindranath Tagore" },
+  { "question": "Which Article of the Constitution deals with Right to Education?", "answer": "Article 21A" },
+  { "question": "Who was the first woman Chief Minister of an Indian state?", "answer": "Sucheta Kriplani" },
+  { "question": "Which is the largest plateau in India?", "answer": "Deccan Plateau" },
+  { "question": "Who among the following was the first President of the Indian National Congress?", "answer": "Womesh Chunder Bonnerjee" },
+  { "question": "Which gas is known as laughing gas?", "answer": "Nitrous Oxide" },
+  { "question": "Who is the current Chief Justice of India (as of 2024)?", "answer": "D.Y. Chandrachud" },
+  { "question": "Which of the following is the national fruit of India?", "answer": "Mango" },
+  { "question": "The term 'GDP' stands for:", "answer": "Gross Domestic Product" },
+  { "question": "The ozone layer is found in which layer of the atmosphere?", "answer": "Stratosphere" },
+  { "question": "Which freedom fighter is known as 'Punjab Kesari'?", "answer": "Lala Lajpat Rai" },
+  { "question": "Which Indian city is famous for diamond cutting and polishing?", "answer": "Surat" },
+  { "question": "Which element is essential for the formation of bones and teeth?", "answer": "Calcium" },
+  { "question": "Who is known as the 'Father of Indian Renaissance'?", "answer": "Raja Ram Mohan Roy" },
+  { "question": "Which is the largest gland in the human body?", "answer": "Liver" },
+  { "question": "The currency of Japan is:", "answer": "Yen" },
+  { "question": "Which river is also known as the 'Dakshin Ganga'?", "answer": "Godavari" },
+  { "question": "In which year was the Indian Space Research Organisation (ISRO) founded?", "answer": "1969" },
+  { "question": "Which vitamin deficiency causes night blindness?", "answer": "Vitamin A" },
+  { "question": "Who among the following was the last Mughal emperor of India?", "answer": "Bahadur Shah II" },
+  { "question": "What is the national animal of India?", "answer": "Tiger" },
+  { "question": "Which city is known as the 'Manchester of India'?", "answer": "Ahmedabad" }
+],
+"Page: 29": [
+  { "question": "Which of the following statements is INCORRECT regarding Fundamental Rights?", "answer": "Fundamental Rights are derived from the Britain Constitution." },
+  { "question": "Under which scheme are collateral free loans of up to ₹10 Lakh extended by Member Lending Institutions (MLIs)?", "answer": "Pradhan Mantri MUDRA Yojana" },
+  { "question": "Which of the following festivals observed in Assam is majorly celebrated by Vaishnavites?", "answer": "Doljatra" },
+  { "question": "Which of the following group of months is the coldest in North India?", "answer": "December and January" },
+  { "question": "Some of the talas invented by M. Balamuralikrishna include Trimukhi, Panchamukhi, and Saptamukhi.", "answer": "M. Balamuralikrishna" },
+  { "question": "In which year was the temple entry movement started by Bhimrao Ambedkar?", "answer": "1927" },
+  { "question": "Who was the first dancer from Odisha to receive Padma Vibhushan?", "answer": "Kelucharan Mohapatra" },
+  { "question": "Sankalp Gupta is associated with which sport?", "answer": "Chess" },
+  { "question": "Where was the 1912 session of the Indian National Congress held in Bihar?", "answer": "Bankipore" },
+  { "question": "Harmonium player Tulsidas Borkar received which award in 2016?", "answer": "Padma Shri" },
+  { "question": "Which ocean surrounds the continent of Antarctica?", "answer": "Southern Ocean" },
+  { "question": "Which Article mentions the Comptroller and Auditor General of India?", "answer": "Article 148" },
+  { "question": "Who was the first Indian to win gold at the Junior World Weightlifting Championship (May 2022)?", "answer": "Harshada Sharad Garud" },
+  { "question": "The real name of Babur, founder of the Mughal dynasty, was:", "answer": "Zahiruddin Muhammad" },
+  { "question": "What percentage of passenger traffic is carried by roads in India?", "answer": "87%" },
+  { "question": "Rudrankksh Patil is associated with which sport?", "answer": "Shooting" },
+  { "question": "Which class includes turtles?", "answer": "Reptilia" },
+  { "question": "According to the Census 2001, main reason for male migration in India?", "answer": "Work and employment" },
+  { "question": "Which state enacted the Cattle Preservation Act 2021 to regulate cattle transport?", "answer": "Assam" },
+  { "question": "Which gametes are found in Spirogyra?", "answer": "Isogamous and non-flagellated" },
+  { "question": "The 'Make in India' initiative primarily focuses on which sector?", "answer": "Manufacturing" },
+  { "question": "Which of the following was NOT a part of Ashoka’s Dhamma?", "answer": "Political unification" },
+  { "question": "N. Rangasamy formed which political party?", "answer": "All India NR Congress" },
+  { "question": "Identify the INCORRECT pair regarding motion examples.", "answer": "Oscillatory motion – Earth moving around the sun" },
+  { "question": "Which gas is essential for photosynthesis?", "answer": "Carbon dioxide" }
+],
+"Page: 30": [
+  { "question": "Gangubai Hangal belonged to which gharana?", "answer": "Kirana gharana" },
+  { "question": "Which of the following districts is an example of an industrial district?", "answer": "Faridabad" },
+  { "question": "Which is NOT a classification criterion of drugs?", "answer": "Behavioural condition" },
+  { "question": "The Non-Cooperation Movement was called off after which incident?", "answer": "Chauri-Chaura incident" },
+  { "question": "Which statements about Ishwar Chandra Vidyasagar are correct?", "answer": "He protested child marriage and helped introduce the Hindu Widow Remarriage Act, 1856." },
+  { "question": "What happens when two forces act in opposite directions on an object?", "answer": "The net force acting on the object is the difference between the two forces." },
+  { "question": "Which industrial policy began the era of liberalisation?", "answer": "Industrial Policy 1991" },
+  { "question": "Who was the first Indian woman to win the Under-20 World Wrestling Championship?", "answer": "Antim Panghal" },
+  { "question": "Which strait separates Russia and Alaska?", "answer": "Bering Strait" },
+  { "question": "Which committee identified legal provisions for implementing Fundamental Duties?", "answer": "Justice Verma Committee" },
+  { "question": "‘Ungalil Oruvan’ is the autobiography of which Chief Minister?", "answer": "M. K. Stalin" },
+  { "question": "Which Articles deal with Parliament and its proceedings?", "answer": "Articles 79 to 122" },
+  { "question": "What was India’s annual exponential growth rate as per Census 2011?", "answer": "1.64%" },
+  { "question": "Kuchipudi dance originated in which state?", "answer": "Andhra Pradesh" },
+  { "question": "Which of the following is a saturated hydrocarbon?", "answer": "C3H8" },
+  { "question": "The final match of IPL 2023 was hosted by which city?", "answer": "Ahmedabad" },
+  { "question": "Ustad Amjad Ali Khan received which Rajiv Gandhi Sadbhavana Award?", "answer": "21st" },
+  { "question": "A wealthy person in Vedic times was known as:", "answer": "Gomat" },
+  { "question": "In which state is the Chandra Prabha Wildlife Sanctuary located?", "answer": "Uttar Pradesh" },
+  { "question": "National Income is defined as:", "answer": "NNP at Factor Cost" },
+  { "question": "Who won the Swiss Open Badminton 2022?", "answer": "P. V. Sindhu" },
+  { "question": "The _______ portal provides information to farmers related to agriculture.", "answer": "Farmer’s portal" },
+  { "question": "Which gas is used in fire extinguishers?", "answer": "Carbon dioxide" },
+  { "question": "Which Mughal emperor built the Jama Masjid?", "answer": "Shah Jahan" },
+  { "question": "Which vitamin helps in absorption of calcium?", "answer": "Vitamin D" }
+],
+  // Add more papers as needed
+};
+
+// Display questions with paper title
+function showPaper(paperName) {
+  const contentDiv = document.getElementById("content");
+  const questions = gkPapers[paperName];
+  if (!questions) {
+    contentDiv.innerHTML = "<p>No questions found.</p>";
+    return;
+  }
+
+  let html = `<div class="paper-title">${paperName}</div>`;
+  questions.forEach((q, index) => {
+    html += `
+      <div class="question-card">
+        <h3>Q${index + 1}: ${q.question}</h3>
+        <p><strong>Ans:</strong> ${q.answer}</p>
+      </div>
+    `;
+  });
+  contentDiv.innerHTML = html;
+}
+
+// Toggle menu
+function toggleMenu() {
+  const menu = document.getElementById("menuButtons");
+  const toggleBtn = document.querySelector(".menu-toggle");
+  if (menu.style.display === "flex") {
+    menu.style.display = "none";
+    toggleBtn.innerText = "Menu ▼";
+  } else {
+    menu.style.display = "flex";
+    toggleBtn.innerText = "Menu ▲";
+  }
+}
+
+// Create buttons dynamically
+const menuDiv = document.getElementById("menuButtons");
+Object.keys(gkPapers).forEach(paper => {
+  const btn = document.createElement("button");
+  btn.innerText = paper;
+  btn.onclick = () => showPaper(paper);
+  menuDiv.appendChild(btn);
+});
+</script>
+
+</body>
+</html>
